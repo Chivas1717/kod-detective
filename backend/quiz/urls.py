@@ -1,6 +1,10 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import LeaderboardView, LanguageViewSet, TestViewSet, TestQuestionsView, SubmitAnswersView
+from .views import (
+    LeaderboardView, LanguageViewSet, TestViewSet, TestQuestionsView, 
+    SubmitAnswersView, QuestionAIAssistantView, AllQuestionsView
+)
+from .auth import CustomAuthToken, RegisterView
 
 router = DefaultRouter()
 router.register(r'languages', LanguageViewSet)
@@ -8,7 +12,12 @@ router.register(r'tests', TestViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('auth/login/', CustomAuthToken.as_view(), name='api_token_auth'),
+    path('auth/register/', RegisterView.as_view(), name='register'),
     path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
     path('tests/<int:test_id>/questions/', TestQuestionsView.as_view(), name='test-questions'),
+    path('questions/', AllQuestionsView.as_view(), name='all-questions'),
     path('tests/<int:test_id>/submit/', SubmitAnswersView.as_view(), name='submit-answers'),
+    path('questions/<int:question_id>/ask/', QuestionAIAssistantView.as_view(), name='question-assistant'),
+    path('ask/', QuestionAIAssistantView.as_view(), name='general-assistant'),
 ] 

@@ -13,6 +13,18 @@ from .serializers import (
 
 # Create your views here. 
 
+# Add a try-except around the import
+try:
+    from .services import ChatService
+except ImportError:
+    # Create a dummy ChatService for testing
+    class ChatService:
+        def __init__(self, *args, **kwargs):
+            pass
+        
+        def get_response(self, *args, **kwargs):
+            return "AI assistance is not available. Please install the requests library."
+
 # Add a view for languages
 class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -145,3 +157,78 @@ class SubmitAnswersView(APIView):
             })
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class QuestionAIAssistantView(APIView):
+    """
+    API endpoint for getting AI assistance with a specific question
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request, question_id=None):
+        # Get the user's prompt from request data
+        user_prompt = request.data.get('prompt', '')
+        
+        if not user_prompt:
+            return Response(
+                {"error": "Please provide a prompt"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Option 1: Get question by ID if provided in URL
+        if question_id:
+            question = get_object_or_404(Question, pk=question_id)
+            question_data = {
+                'id': question.id,
+                'prompt': question.prompt,
+                'type': question.type,
+                'correct_answer': question.correct_answer,
+                'hint': question.hint,
+                'clue': question.clue,
+                'metadata': question.metadata
+            }
+            
+            # Initialize the chat service and get response with question context
+            chat_service = ChatService()
+            ai_response = chat_service.get_response(user_prompt, question_data)
+        # Option 2: Get question from request data
+        else:
+            question_data = request.data.get('question', {})
+            if question_data:
+                # If question data is provided, use it for context
+                chat_service = ChatService()
+                ai_response = chat_service.get_response(user_prompt, question_data)
+            else:
+                # Handle general programming questions without question context
+                chat_service = ChatService()
+                ai_response = chat_service.get_general_response(user_prompt)
+        
+        # Return response
+        return Response({
+            'response': ai_response
+        })
+
+class AllQuestionsView(generics.ListAPIView):
+    """
+    API endpoint to retrieve all questions in the application
+    """
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        """
+        Optionally filter questions by language_id or type
+        """
+        queryset = Question.objects.all()
+        
+        # Filter by language if provided
+        language_id = self.request.query_params.get('language_id')
+        if language_id:
+            queryset = queryset.filter(test__language_id=language_id)
+            
+        # Filter by question type if provided
+        question_type = self.request.query_params.get('type')
+        if question_type:
+            queryset = queryset.filter(type=question_type)
+            
+        return queryset
