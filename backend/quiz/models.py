@@ -24,8 +24,6 @@ class Test(models.Model):
         max_length=10, 
         default='medium'
     )
-    hint = models.TextField(blank=True)
-    clue = models.TextField(blank=True)
     language = models.ForeignKey(Language, on_delete=models.CASCADE, related_name='tests', null=True, blank=True)
     
     def __str__(self):
@@ -45,7 +43,10 @@ class Question(models.Model):
         default='single'
     )
     prompt = models.TextField(default="")
-    metadata = models.JSONField(default=dict)
+    hint = models.TextField(blank=True)  # Moved from Test to Question
+    clue = models.TextField(blank=True)  # Moved from Test to Question
+    metadata = models.JSONField(default=dict)  # Contains options, etc.
+    correct_answer = models.JSONField(default=dict)  # Explicit field for correct answer
     
     def __str__(self):
         test_title = self.test.title if self.test else "No test"

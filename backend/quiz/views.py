@@ -90,7 +90,7 @@ class SubmitAnswersView(APIView):
                 
                 try:
                     question = Question.objects.get(pk=question_id, test=test)
-                    correct_answer = question.metadata.get('correct_answer')
+                    correct_answer = question.correct_answer  # Use the dedicated field
                     
                     # Check if answer is correct
                     is_correct = submitted_answer == correct_answer

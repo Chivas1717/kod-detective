@@ -20,17 +20,16 @@ class TestSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Test
-        fields = ['id', 'title', 'difficulty', 'hint', 'clue', 'language', 'language_name', 'language_code']
+        fields = ['id', 'title', 'difficulty', 'language', 'language_name', 'language_code']
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ['id', 'type', 'prompt', 'metadata']
-        # Note: In production, you'd want to exclude correct_answer from metadata
+        fields = ['id', 'type', 'prompt', 'hint', 'clue', 'metadata', 'correct_answer']
 
 class AnswerItem(serializers.Serializer):
     question_id = serializers.IntegerField()
-    answer = serializers.JSONField()  # Using JSONField to handle different answer formats
+    answer = serializers.JSONField()
 
 class SubmitAnswerSerializer(serializers.Serializer):
     answers = AnswerItem(many=True)

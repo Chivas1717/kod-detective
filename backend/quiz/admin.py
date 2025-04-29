@@ -21,7 +21,7 @@ class TestAdmin(admin.ModelAdmin):
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ('id', 'test', 'type', 'prompt_preview')
     list_filter = ('test', 'type', 'test__language')
-    search_fields = ('prompt',)
+    search_fields = ('prompt', 'hint', 'clue')
     
     def prompt_preview(self, obj):
         return obj.prompt[:50] + '...' if len(obj.prompt) > 50 else obj.prompt
