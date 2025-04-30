@@ -3,85 +3,83 @@ from quiz.models import Language, Test, Question, UserProfile
 from django.contrib.auth.models import User
 
 class Command(BaseCommand):
-    help = 'Populates the database with sample data for testing'
+    help = 'Наповнює базу даних прикладами для тестування'
 
     def handle(self, *args, **kwargs):
-        # Create JavaScript language
+        # Створення мови JavaScript
         js_language, created = Language.objects.get_or_create(
             name='JavaScript',
             code='js',
             icon='js-icon.png'
         )
-        self.stdout.write(self.style.SUCCESS(f'Created language: {js_language.name}'))
+        self.stdout.write(self.style.SUCCESS(f'Створено мову: {js_language.name}'))
 
-        # Create three tests with different difficulty levels
+        # Створення трьох тестів з різними рівнями складності
         tests = [
             Test.objects.create(
-                title='JavaScript Basics',
+                title='Основи JavaScript',
                 difficulty='easy',
                 language=js_language
             ),
             Test.objects.create(
-                title='JavaScript Advanced Concepts',
+                title='Розширені концепції JavaScript',
                 difficulty='medium',
                 language=js_language
             ),
             Test.objects.create(
-                title='TypeScript Expert Challenge',
+                title='Експертний виклик TypeScript',
                 difficulty='hard',
                 language=js_language
             )
         ]
         
         for test in tests:
-            self.stdout.write(self.style.SUCCESS(f'Created test: {test.title}'))
+            self.stdout.write(self.style.SUCCESS(f'Створено тест: {test.title}'))
             
-            # Create questions for each test
+            # Створення питань для кожного тесту
             self._create_questions_for_test(test)
             
-        self.stdout.write(self.style.SUCCESS('Database populated successfully!'))
+        self.stdout.write(self.style.SUCCESS('Базу даних успішно наповнено!'))
     
     def _create_questions_for_test(self, test):
-        # Create one question of each type
+        # Створення одного питання кожного типу
         
-        # Single-choice question
+        # Питання з одним варіантом відповіді
         Question.objects.create(
             test=test,
             type='single',
-            prompt='What is the correct way to declare a variable in JavaScript that cannot be reassigned?',
-            hint='Think about variable declaration keywords introduced in ES6',
-            clue='It starts with "c"',
+            prompt='Яке ключове слово використовується для оголошення змінної з областю видимості блока в JavaScript?',
+            hint='Подумайте про ключові слова для оголошення змінних, введені в ES6',
+            clue='Воно починається з літери "l"',
             metadata={
                 'options': [
-                    {'id': 'a', 'text': 'var x = 5;'},
-                    {'id': 'b', 'text': 'let x = 5;'},
-                    {'id': 'c', 'text': 'const x = 5;'},
-                    {'id': 'd', 'text': 'static x = 5;'}
+                    {'id': 'a', 'text': 'var'},
+                    {'id': 'b', 'text': 'const'},
+                    {'id': 'c', 'text': 'let'},
+                    {'id': 'd', 'text': 'function'}
                 ]
             },
             correct_answer={'id': 'c'}
         )
         
-        # Fill-in-the-blank question
+        # Питання з заповненням пропуску
         Question.objects.create(
             test=test,
             type='blank',
-            prompt='Complete the code to log "Hello World" to the console:\n\nconsole.___("Hello World");',
-            hint='This is the most common console method for output',
-            clue='It\'s a method that starts with "l"',
-            metadata={
-                'placeholder': 'Type your answer here'
-            },
-            correct_answer={'text': 'log'}
+            prompt='Заповніть пропуск: Щоб звернутися до властивості об\'єкта в JavaScript, ви використовуєте ____ нотацію або ____ нотацію.',
+            hint='Існує два способи доступу до властивостей об\'єкта',
+            clue='Одна з них використовує крапку',
+            metadata={},
+            correct_answer={'text': 'крапкову, квадратних дужок'}
         )
         
-        # Code ordering question
+        # Питання з упорядкуванням коду
         Question.objects.create(
             test=test,
             type='order',
-            prompt='Arrange these lines of code to create a function that returns the square of a number:',
-            hint='Think about the correct syntax for a function declaration',
-            clue='Start with the function keyword',
+            prompt='Розташуйте ці рядки коду, щоб створити функцію, яка повертає квадрат числа:',
+            hint='Подумайте про правильний синтаксис оголошення функції',
+            clue='Почніть з ключового слова function',
             metadata={
                 'options': [
                     {'id': 1, 'text': 'function square(x) {'},
@@ -93,13 +91,13 @@ class Command(BaseCommand):
             correct_answer={'order': [1, 2, 3, 4]}
         )
         
-        # Code tracing question
+        # Питання з трасуванням коду
         Question.objects.create(
             test=test,
             type='trace',
-            prompt='What will be the output of this code?\n\nlet x = 1;\nlet y = 2;\n[x, y] = [y, x];\nconsole.log(x, y);',
-            hint='This is using array destructuring to swap values',
-            clue='Think about what happens to the variables after the swap',
+            prompt='Що буде виведено в результаті виконання цього коду?\n\nlet x = 1;\nlet y = 2;\n[x, y] = [y, x];\nconsole.log(x, y);',
+            hint='Тут використовується деструктуризація масиву для обміну значеннями',
+            clue='Подумайте, що відбувається зі змінними після обміну',
             metadata={
                 'options': [
                     {'id': 'a', 'text': '1 2'},
@@ -111,13 +109,13 @@ class Command(BaseCommand):
             correct_answer={'id': 'b'}
         )
         
-        # Debugging question
+        # Питання з налагодженням
         Question.objects.create(
             test=test,
             type='debug',
-            prompt='Fix the error in this code:\n\nfunction sum(a, b) {\n  return a + b\n}\n\nconst result = sum(5, "10");\nconsole.log(result * 2);',
-            hint='Think about type conversion when working with different types',
-            clue='You need to convert the string to a number',
+            prompt='Виправте помилку в цьому коді:\n\nfunction sum(a, b) {\n  return a + b\n}\n\nconst result = sum(5, "10");\nconsole.log(result * 2);',
+            hint='Подумайте про перетворення типів при роботі з різними типами даних',
+            clue='Вам потрібно перетворити рядок на число',
             metadata={
                 'originalCode': 'function sum(a, b) {\n  return a + b\n}\n\nconst result = sum(5, "10");\nconsole.log(result * 2);'
             },
@@ -126,4 +124,4 @@ class Command(BaseCommand):
             }
         )
         
-        self.stdout.write(self.style.SUCCESS(f'  Created 5 questions for test: {test.title}'))
+        self.stdout.write(self.style.SUCCESS(f'  Створено 5 питань для тесту: {test.title}'))

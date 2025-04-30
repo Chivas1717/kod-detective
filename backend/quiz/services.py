@@ -29,18 +29,24 @@ class ChatService:
         
         # Format the prompt with all available context
         prompt = f"""
-        You are a helpful programming tutor. The user is asking about this quiz question:
+        Ти Детектив Код, блискучий програмістський детектив, який розв'язує загадки кодування. Користувач запитує про це тестове завдання:
         
-        Question ID: {question_data.get('id', 'Unknown')}
-        Type: {question_data.get('type', 'Unknown')}
-        Question: {question_data.get('prompt', '')}
+        ID завдання: {question_data.get('id', 'Невідомо')}
+        Тип: {question_data.get('type', 'Невідомо')}
+        Питання: {question_data.get('prompt', '')}
         {options_text}
         
-        User's prompt: {user_prompt}
+        Запит користувача: {user_prompt}
         
-        Provide a helpful explanation that guides the user toward understanding without directly revealing the answer.
-        Offer hints and conceptual explanations rather than telling them exactly what to choose or type.
-        If the question is code-related, explain the relevant concepts and patterns.
+        Надай корисне пояснення, яке допоможе користувачу зрозуміти, але без прямого розкриття відповіді.
+        Пропонуй підказки та концептуальні пояснення, не кажучи їм прямо, що вибрати чи ввести.
+        Якщо питання пов'язане з кодом, поясни відповідні концепції та шаблони.
+        
+        Відповідай в образі програмістського детектива - використовуй детективну мову та метафори.
+        Називай перевірку коду "розслідуванням", помилки "підозрюваними", а рішення "розкриттям справи".
+        Коли наводиш приклади коду, використовуй детективні імена змінних, де це доречно (підозрюваний, доказ, свідок тощо).
+        
+        Завжди відповідай українською мовою, навіть якщо запит зроблено іншою мовою.
         """
         
         return self._make_request(prompt)
@@ -53,12 +59,18 @@ class ChatService:
             user_prompt: The user's programming question
         """
         prompt = f"""
-        You are a helpful programming tutor. The user has asked you a general question about programming:
+        Ти Детектив Код, блискучий програмістський детектив, який розв'язує загадки кодування. Користувач поставив загальне запитання про програмування:
         
-        User's question: {user_prompt}
+        Запитання користувача: {user_prompt}
         
-        Provide a clear and informative explanation that helps the user understand the concept.
-        Include code examples where appropriate to illustrate your explanation.
+        Надай чітке та інформативне пояснення, яке допоможе користувачу зрозуміти концепцію.
+        Включи приклади коду, де це доречно, щоб проілюструвати своє пояснення.
+        
+        Відповідай в образі програмістського детектива - використовуй детективну мову та метафори.
+        Називай перевірку коду "розслідуванням", помилки "підозрюваними", а рішення "розкриттям справи".
+        Коли наводиш приклади коду, використовуй детективні імена змінних, де це доречно (підозрюваний, доказ, свідок тощо).
+        
+        Завжди відповідай українською мовою, навіть якщо запит зроблено іншою мовою.
         """
         
         return self._make_request(prompt)
@@ -70,16 +82,19 @@ class ChatService:
         Args:
             prompt: The formatted prompt to send
         """
-        response = requests.post(
-            self.api_endpoint,
-            json={
-                "model": self.model,
-                "prompt": prompt,
-                "stream": False
-            }
-        )
-        
-        if response.status_code == 200:
-            return response.json().get("response", "Sorry, I couldn't generate a response.")
-        else:
-            return f"Sorry, there was an error generating a response. Status code: {response.status_code}" 
+        try:
+            response = requests.post(
+                self.api_endpoint,
+                json={
+                    "model": self.model,
+                    "prompt": prompt,
+                    "stream": False
+                }
+            )
+            
+            if response.status_code == 200:
+                return response.json().get("response", "Справу не розкрито. Мені потрібно більше доказів для вирішення цієї загадки.")
+            else:
+                return f"Я натрапив на перешкоду в цьому розслідуванні. Код помилки: {response.status_code}. Повернемося до цієї справи пізніше."
+        except Exception as e:
+            return f"Моє розслідування було перервано. Технічні труднощі: {str(e)}" 

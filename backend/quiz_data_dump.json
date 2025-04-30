@@ -1,0 +1,552 @@
+[
+{
+    "model": "quiz.language",
+    "pk": 1,
+    "fields": {
+        "name": "JavaScript",
+        "code": "js",
+        "icon": "js-icon.png"
+    }
+},
+{
+    "model": "quiz.test",
+    "pk": 1,
+    "fields": {
+        "title": "JavaScript Basics",
+        "difficulty": "easy",
+        "language": 1
+    }
+},
+{
+    "model": "quiz.test",
+    "pk": 2,
+    "fields": {
+        "title": "JavaScript Advanced Concepts",
+        "difficulty": "medium",
+        "language": 1
+    }
+},
+{
+    "model": "quiz.test",
+    "pk": 3,
+    "fields": {
+        "title": "TypeScript Expert Challenge",
+        "difficulty": "hard",
+        "language": 1
+    }
+},
+{
+    "model": "quiz.question",
+    "pk": 1,
+    "fields": {
+        "test": 1,
+        "type": "single",
+        "prompt": "What is the correct way to declare a variable in JavaScript that cannot be reassigned?",
+        "hint": "Think about variable declaration keywords introduced in ES6",
+        "clue": "It starts with \"c\"",
+        "metadata": {
+            "options": [
+                {
+                    "id": "a",
+                    "text": "var x = 5;"
+                },
+                {
+                    "id": "b",
+                    "text": "let x = 5;"
+                },
+                {
+                    "id": "c",
+                    "text": "const x = 5;"
+                },
+                {
+                    "id": "d",
+                    "text": "static x = 5;"
+                }
+            ]
+        },
+        "correct_answer": {
+            "id": "c"
+        }
+    }
+},
+{
+    "model": "quiz.question",
+    "pk": 2,
+    "fields": {
+        "test": 1,
+        "type": "blank",
+        "prompt": "Complete the code to log \"Hello World\" to the console:\n\nconsole.___(\"Hello World\");",
+        "hint": "This is the most common console method for output",
+        "clue": "It's a method that starts with \"l\"",
+        "metadata": {
+            "placeholder": "Type your answer here"
+        },
+        "correct_answer": {
+            "text": "log"
+        }
+    }
+},
+{
+    "model": "quiz.question",
+    "pk": 3,
+    "fields": {
+        "test": 1,
+        "type": "order",
+        "prompt": "Arrange these lines of code to create a function that returns the square of a number:",
+        "hint": "Think about the correct syntax for a function declaration",
+        "clue": "Start with the function keyword",
+        "metadata": {
+            "options": [
+                {
+                    "id": 1,
+                    "text": "function square(x) {"
+                },
+                {
+                    "id": 2,
+                    "text": "  return x * x;"
+                },
+                {
+                    "id": 3,
+                    "text": "}"
+                },
+                {
+                    "id": 4,
+                    "text": "console.log(square(5));"
+                }
+            ]
+        },
+        "correct_answer": {
+            "order": [
+                1,
+                2,
+                3,
+                4
+            ]
+        }
+    }
+},
+{
+    "model": "quiz.question",
+    "pk": 4,
+    "fields": {
+        "test": 1,
+        "type": "trace",
+        "prompt": "What will be the output of this code?\n\nlet x = 1;\nlet y = 2;\n[x, y] = [y, x];\nconsole.log(x, y);",
+        "hint": "This is using array destructuring to swap values",
+        "clue": "Think about what happens to the variables after the swap",
+        "metadata": {
+            "options": [
+                {
+                    "id": "a",
+                    "text": "1 2"
+                },
+                {
+                    "id": "b",
+                    "text": "2 1"
+                },
+                {
+                    "id": "c",
+                    "text": "1 1"
+                },
+                {
+                    "id": "d",
+                    "text": "2 2"
+                }
+            ]
+        },
+        "correct_answer": {
+            "id": "b"
+        }
+    }
+},
+{
+    "model": "quiz.question",
+    "pk": 5,
+    "fields": {
+        "test": 1,
+        "type": "debug",
+        "prompt": "Fix the error in this code:\n\nfunction sum(a, b) {\n  return a + b\n}\n\nconst result = sum(5, \"10\");\nconsole.log(result * 2);",
+        "hint": "Think about type conversion when working with different types",
+        "clue": "You need to convert the string to a number",
+        "metadata": {
+            "originalCode": "function sum(a, b) {\n  return a + b\n}\n\nconst result = sum(5, \"10\");\nconsole.log(result * 2);"
+        },
+        "correct_answer": {
+            "correctedCode": "function sum(a, b) {\n  return a + Number(b)\n}\n\nconst result = sum(5, \"10\");\nconsole.log(result * 2);"
+        }
+    }
+},
+{
+    "model": "quiz.question",
+    "pk": 6,
+    "fields": {
+        "test": 2,
+        "type": "single",
+        "prompt": "What is the correct way to declare a variable in JavaScript that cannot be reassigned?",
+        "hint": "Think about variable declaration keywords introduced in ES6",
+        "clue": "It starts with \"c\"",
+        "metadata": {
+            "options": [
+                {
+                    "id": "a",
+                    "text": "var x = 5;"
+                },
+                {
+                    "id": "b",
+                    "text": "let x = 5;"
+                },
+                {
+                    "id": "c",
+                    "text": "const x = 5;"
+                },
+                {
+                    "id": "d",
+                    "text": "static x = 5;"
+                }
+            ]
+        },
+        "correct_answer": {
+            "id": "c"
+        }
+    }
+},
+{
+    "model": "quiz.question",
+    "pk": 7,
+    "fields": {
+        "test": 2,
+        "type": "blank",
+        "prompt": "Complete the code to log \"Hello World\" to the console:\n\nconsole.___(\"Hello World\");",
+        "hint": "This is the most common console method for output",
+        "clue": "It's a method that starts with \"l\"",
+        "metadata": {
+            "placeholder": "Type your answer here"
+        },
+        "correct_answer": {
+            "text": "log"
+        }
+    }
+},
+{
+    "model": "quiz.question",
+    "pk": 8,
+    "fields": {
+        "test": 2,
+        "type": "order",
+        "prompt": "Arrange these lines of code to create a function that returns the square of a number:",
+        "hint": "Think about the correct syntax for a function declaration",
+        "clue": "Start with the function keyword",
+        "metadata": {
+            "options": [
+                {
+                    "id": 1,
+                    "text": "function square(x) {"
+                },
+                {
+                    "id": 2,
+                    "text": "  return x * x;"
+                },
+                {
+                    "id": 3,
+                    "text": "}"
+                },
+                {
+                    "id": 4,
+                    "text": "console.log(square(5));"
+                }
+            ]
+        },
+        "correct_answer": {
+            "order": [
+                1,
+                2,
+                3,
+                4
+            ]
+        }
+    }
+},
+{
+    "model": "quiz.question",
+    "pk": 9,
+    "fields": {
+        "test": 2,
+        "type": "trace",
+        "prompt": "What will be the output of this code?\n\nlet x = 1;\nlet y = 2;\n[x, y] = [y, x];\nconsole.log(x, y);",
+        "hint": "This is using array destructuring to swap values",
+        "clue": "Think about what happens to the variables after the swap",
+        "metadata": {
+            "options": [
+                {
+                    "id": "a",
+                    "text": "1 2"
+                },
+                {
+                    "id": "b",
+                    "text": "2 1"
+                },
+                {
+                    "id": "c",
+                    "text": "1 1"
+                },
+                {
+                    "id": "d",
+                    "text": "2 2"
+                }
+            ]
+        },
+        "correct_answer": {
+            "id": "b"
+        }
+    }
+},
+{
+    "model": "quiz.question",
+    "pk": 10,
+    "fields": {
+        "test": 2,
+        "type": "debug",
+        "prompt": "Fix the error in this code:\n\nfunction sum(a, b) {\n  return a + b\n}\n\nconst result = sum(5, \"10\");\nconsole.log(result * 2);",
+        "hint": "Think about type conversion when working with different types",
+        "clue": "You need to convert the string to a number",
+        "metadata": {
+            "originalCode": "function sum(a, b) {\n  return a + b\n}\n\nconst result = sum(5, \"10\");\nconsole.log(result * 2);"
+        },
+        "correct_answer": {
+            "correctedCode": "function sum(a, b) {\n  return a + Number(b)\n}\n\nconst result = sum(5, \"10\");\nconsole.log(result * 2);"
+        }
+    }
+},
+{
+    "model": "quiz.question",
+    "pk": 11,
+    "fields": {
+        "test": 3,
+        "type": "single",
+        "prompt": "What is the correct way to declare a variable in JavaScript that cannot be reassigned?",
+        "hint": "Think about variable declaration keywords introduced in ES6",
+        "clue": "It starts with \"c\"",
+        "metadata": {
+            "options": [
+                {
+                    "id": "a",
+                    "text": "var x = 5;"
+                },
+                {
+                    "id": "b",
+                    "text": "let x = 5;"
+                },
+                {
+                    "id": "c",
+                    "text": "const x = 5;"
+                },
+                {
+                    "id": "d",
+                    "text": "static x = 5;"
+                }
+            ]
+        },
+        "correct_answer": {
+            "id": "c"
+        }
+    }
+},
+{
+    "model": "quiz.question",
+    "pk": 12,
+    "fields": {
+        "test": 3,
+        "type": "blank",
+        "prompt": "Complete the code to log \"Hello World\" to the console:\n\nconsole.___(\"Hello World\");",
+        "hint": "This is the most common console method for output",
+        "clue": "It's a method that starts with \"l\"",
+        "metadata": {
+            "placeholder": "Type your answer here"
+        },
+        "correct_answer": {
+            "text": "log"
+        }
+    }
+},
+{
+    "model": "quiz.question",
+    "pk": 13,
+    "fields": {
+        "test": 3,
+        "type": "order",
+        "prompt": "Arrange these lines of code to create a function that returns the square of a number:",
+        "hint": "Think about the correct syntax for a function declaration",
+        "clue": "Start with the function keyword",
+        "metadata": {
+            "options": [
+                {
+                    "id": 1,
+                    "text": "function square(x) {"
+                },
+                {
+                    "id": 2,
+                    "text": "  return x * x;"
+                },
+                {
+                    "id": 3,
+                    "text": "}"
+                },
+                {
+                    "id": 4,
+                    "text": "console.log(square(5));"
+                }
+            ]
+        },
+        "correct_answer": {
+            "order": [
+                1,
+                2,
+                3,
+                4
+            ]
+        }
+    }
+},
+{
+    "model": "quiz.question",
+    "pk": 14,
+    "fields": {
+        "test": 3,
+        "type": "trace",
+        "prompt": "What will be the output of this code?\n\nlet x = 1;\nlet y = 2;\n[x, y] = [y, x];\nconsole.log(x, y);",
+        "hint": "This is using array destructuring to swap values",
+        "clue": "Think about what happens to the variables after the swap",
+        "metadata": {
+            "options": [
+                {
+                    "id": "a",
+                    "text": "1 2"
+                },
+                {
+                    "id": "b",
+                    "text": "2 1"
+                },
+                {
+                    "id": "c",
+                    "text": "1 1"
+                },
+                {
+                    "id": "d",
+                    "text": "2 2"
+                }
+            ]
+        },
+        "correct_answer": {
+            "id": "b"
+        }
+    }
+},
+{
+    "model": "quiz.question",
+    "pk": 15,
+    "fields": {
+        "test": 3,
+        "type": "debug",
+        "prompt": "Fix the error in this code:\n\nfunction sum(a, b) {\n  return a + b\n}\n\nconst result = sum(5, \"10\");\nconsole.log(result * 2);",
+        "hint": "Think about type conversion when working with different types",
+        "clue": "You need to convert the string to a number",
+        "metadata": {
+            "originalCode": "function sum(a, b) {\n  return a + b\n}\n\nconst result = sum(5, \"10\");\nconsole.log(result * 2);"
+        },
+        "correct_answer": {
+            "correctedCode": "function sum(a, b) {\n  return a + Number(b)\n}\n\nconst result = sum(5, \"10\");\nconsole.log(result * 2);"
+        }
+    }
+},
+{
+    "model": "quiz.userprofile",
+    "pk": 1,
+    "fields": {
+        "user": 1,
+        "score": 0
+    }
+},
+{
+    "model": "quiz.userprofile",
+    "pk": 2,
+    "fields": {
+        "user": 2,
+        "score": 5
+    }
+},
+{
+    "model": "quiz.userprogress",
+    "pk": 1,
+    "fields": {
+        "user": 2,
+        "question": 1,
+        "is_correct": true,
+        "attempts": 1,
+        "time_spent": 300,
+        "used_hint": false,
+        "timestamp": "2025-04-29T13:04:56.899Z"
+    }
+},
+{
+    "model": "quiz.userprogress",
+    "pk": 2,
+    "fields": {
+        "user": 2,
+        "question": 2,
+        "is_correct": true,
+        "attempts": 1,
+        "time_spent": 300,
+        "used_hint": false,
+        "timestamp": "2025-04-29T13:04:56.901Z"
+    }
+},
+{
+    "model": "quiz.userprogress",
+    "pk": 3,
+    "fields": {
+        "user": 2,
+        "question": 3,
+        "is_correct": true,
+        "attempts": 1,
+        "time_spent": 300,
+        "used_hint": false,
+        "timestamp": "2025-04-29T13:04:56.902Z"
+    }
+},
+{
+    "model": "quiz.userprogress",
+    "pk": 4,
+    "fields": {
+        "user": 2,
+        "question": 4,
+        "is_correct": true,
+        "attempts": 1,
+        "time_spent": 300,
+        "used_hint": false,
+        "timestamp": "2025-04-29T13:04:56.904Z"
+    }
+},
+{
+    "model": "quiz.userprogress",
+    "pk": 5,
+    "fields": {
+        "user": 2,
+        "question": 5,
+        "is_correct": true,
+        "attempts": 1,
+        "time_spent": 300,
+        "used_hint": false,
+        "timestamp": "2025-04-29T13:04:56.905Z"
+    }
+},
+{
+    "model": "quiz.takentest",
+    "pk": 1,
+    "fields": {
+        "user": 2,
+        "test": 1,
+        "score_obtained": 5,
+        "completed_at": "2025-04-29T13:04:56.907Z"
+    }
+}
+]
