@@ -232,3 +232,41 @@ class AllQuestionsView(generics.ListAPIView):
             queryset = queryset.filter(type=question_type)
             
         return queryset
+
+class UserProfileView(APIView):
+    """
+    API endpoint for retrieving and updating the current user's profile
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        """Get the current user's profile information"""
+        user = request.user
+        # Include the user's profile data in the serialized response
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+class UserUpdateView(APIView):
+    """
+    API endpoint for updating user profile information
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def patch(self, request):
+        """Update the user's username and/or status"""
+        user = request.user
+        username = request.data.get('username')
+        
+        # Update username if provided and not already taken
+        if username and username != user.username:
+            if User.objects.filter(username=username).exclude(id=user.id).exists():
+                return Response(
+                    {"error": "Username already exists"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            user.username = username
+            user.save()
+        
+        # Return the updated user data
+        serializer = UserSerializer(user)
+        return Response(serializer.data)

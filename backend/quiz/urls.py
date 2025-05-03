@@ -2,7 +2,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
     LeaderboardView, LanguageViewSet, TestViewSet, TestQuestionsView, 
-    SubmitAnswersView, QuestionAIAssistantView, AllQuestionsView
+    SubmitAnswersView, QuestionAIAssistantView, AllQuestionsView,
+    UserProfileView, UserUpdateView
 )
 from .auth import CustomAuthToken, RegisterView
 
@@ -20,4 +21,6 @@ urlpatterns = [
     path('tests/<int:test_id>/submit/', SubmitAnswersView.as_view(), name='submit-answers'),
     path('questions/<int:question_id>/ask/', QuestionAIAssistantView.as_view(), name='question-assistant'),
     path('ask/', QuestionAIAssistantView.as_view(), name='general-assistant'),
+    path('users/self/', UserProfileView.as_view(), name='user-profile'),
+    path('users/update/', UserUpdateView.as_view(), name='update-user'),
 ] 
