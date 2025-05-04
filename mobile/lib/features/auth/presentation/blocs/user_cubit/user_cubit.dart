@@ -25,10 +25,9 @@ class UserCubit extends Cubit<UserState> {
     );
   }
 
-  void updateUser(String? username, String? status) async {
+  void updateUser(String? username) async {
     emit(UserLoading(user: state.user));
-    final userCheckingResult =
-        await repository.updateUser(username: username, status: status);
+    final userCheckingResult = await repository.updateUser(username: username);
 
     userCheckingResult.fold(
       (failure) => emit(UserFailure(

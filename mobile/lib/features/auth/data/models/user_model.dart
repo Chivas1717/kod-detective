@@ -6,9 +6,9 @@ class UserModel extends User {
     super.username,
     super.profilePic,
     super.status,
-    super.phoneNumber,
-    super.lastSeen,
-    super.online,
+    super.email,
+    super.token,
+    super.score,
   });
 
   UserModel.fromJson(Map<String, dynamic> json) {
@@ -16,8 +16,8 @@ class UserModel extends User {
     username = json['username'];
     profilePic = json['profile_pic'];
     status = json['status'];
-    phoneNumber = json['phone_number'];
-    lastSeen = json['last_seen'];
-    online = json['online'];
+    email = json['email'];
+    token = json['token'];
+    score = json['score'];
   }
 }

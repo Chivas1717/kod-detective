@@ -1,9 +1,11 @@
-import 'package:clean_architecture_template/features/chats/presentation/screens/main_chats_screen.dart';
+import 'package:clean_architecture_template/features/auth/domain/entities/user.dart';
 import 'package:clean_architecture_template/features/chats/presentation/widgets/user_avatar.dart';
 import 'package:flutter/material.dart';
 
-class FavoriteContacts extends StatelessWidget {
-  const FavoriteContacts({super.key});
+class LeaderBoard extends StatelessWidget {
+  const LeaderBoard({super.key, required this.leaderBoard});
+
+  final List<User> leaderBoard;
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +32,16 @@ class FavoriteContacts extends StatelessWidget {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              buildContactAvatar('Alla', 'img1.jpeg'),
-              buildContactAvatar('July', 'img2.jpeg'),
-              buildContactAvatar('Mikle', 'img3.jpeg'),
-              buildContactAvatar('Kler', 'img4.jpg'),
-              buildContactAvatar('Moane', 'img5.jpeg'),
-              buildContactAvatar('Julie', 'img6.jpeg'),
-              buildContactAvatar('Allen', 'img7.jpeg'),
-              buildContactAvatar('John', 'img8.jpg'),
+              for (var user in leaderBoard)
+                buildContactAvatar(user.username!, 'img1.jpeg'),
+              // buildContactAvatar('Alla', 'img1.jpeg'),
+              // buildContactAvatar('July', 'img2.jpeg'),
+              // buildContactAvatar('Mikle', 'img3.jpeg'),
+              // buildContactAvatar('Kler', 'img4.jpg'),
+              // buildContactAvatar('Moane', 'img5.jpeg'),
+              // buildContactAvatar('Julie', 'img6.jpeg'),
+              // buildContactAvatar('Allen', 'img7.jpeg'),
+              // buildContactAvatar('John', 'img8.jpg'),
             ],
           ),
         ),

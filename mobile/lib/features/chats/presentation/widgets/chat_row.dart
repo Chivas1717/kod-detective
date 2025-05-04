@@ -3,33 +3,33 @@ import 'package:clean_architecture_template/core/widgets/transitions/transitions
 import 'package:clean_architecture_template/features/chats/presentation/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 
-class ChatRow extends StatefulWidget {
-  final String img, name, message;
-  final int chatId;
-  const ChatRow({
+class TestRow extends StatefulWidget {
+  final String img, name;
+  final int testId;
+
+  const TestRow({
     super.key,
     required this.img,
     required this.name,
-    required this.message,
-    required this.chatId,
+    required this.testId,
   });
 
   @override
-  State<ChatRow> createState() => _ChatRowState();
+  State<TestRow> createState() => _TestRowState();
 }
 
-class _ChatRowState extends State<ChatRow> {
+class _TestRowState extends State<TestRow> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        Navigator.of(context).push(
-          FadePageTransition(
-              child: ChatScreen(
-            chatId: widget.chatId,
-          )),
-        );
+        // Navigator.of(context).push(
+        //   FadePageTransition(
+        //       child: ChatScreen(
+        //     chatId: widget.testId,
+        //   )),
+        // );
       },
       child: Column(
         children: [
@@ -57,16 +57,6 @@ class _ChatRowState extends State<ChatRow> {
                       Text(
                         widget.name,
                         style: const TextStyle(color: CColors.grey),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        widget.message,
-                        style: TextStyle(
-                            color: widget.message == 'Joined recently...'
-                                ? CColors.secondary
-                                : CColors.black),
                       ),
                     ],
                   )

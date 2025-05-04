@@ -1,49 +1,65 @@
 class User {
   int? id;
   String? username;
+  String? email;
+  String? token;
+  int? score;
+  
+  // Optional fields you might want to keep
   String? profilePic;
   String? status;
-  String? phoneNumber;
-  String? lastSeen;
-  bool? online;
 
   User({
     this.id,
     this.username,
+    this.email,
+    this.token,
+    this.score,
     this.profilePic,
     this.status,
-    this.phoneNumber,
-    this.lastSeen,
-    this.online,
   });
 
   User copyWith({
     int? id,
     String? username,
+    String? email,
+    String? token,
+    int? score,
     String? profilePic,
     String? status,
-    String? phoneNumber,
-    String? lastSeen,
-    bool? online,
   }) {
     return User(
       id: id ?? this.id,
       username: username ?? this.username,
+      email: email ?? this.email,
+      token: token ?? this.token,
+      score: score ?? this.score,
       profilePic: profilePic ?? this.profilePic,
       status: status ?? this.status,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      lastSeen: lastSeen ?? this.lastSeen,
-      online: online ?? this.online,
     );
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
-    int? id = json['id'];
-    String? username = json['username'];
-
     return User(
-      id: id,
-      username: username,
+      id: json['id'] ?? json['user_id'],
+      username: json['username'],
+      email: json['email'],
+      token: json['token'],
+      score: json['score'],
+      profilePic: json['profile_pic'],
+      status: json['status'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'username': username,
+      'email': email,
+      'token': token,
+      'score': score,
+      'profile_pic': profilePic,
+      'status': status,
+    };
   }
 }

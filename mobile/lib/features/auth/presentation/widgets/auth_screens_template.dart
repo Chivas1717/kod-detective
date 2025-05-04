@@ -95,17 +95,17 @@ class _AuthScreensTemplateState extends State<AuthScreensTemplate>
               WaveWidget(
                 config: CustomConfig(
                   gradients: [
-                    [Colors.blue, Color(0xEEccf9ff)],
-                    [Colors.blue[800]!, Color(0xEE7ce8ff)],
-                    [Colors.blue, Color(0x6655d0ff)],
-                    [Colors.blue, Color(0x5500acdf)]
+                    [Colors.red, const Color(0xEEffd7d7)],
+                    [Colors.red[800]!, const Color(0xEEff9e9e)],
+                    [Colors.red, const Color(0x66ff7070)],
+                    [Colors.red, const Color(0x55df0000)]
                   ],
                   durations: [35000, 19440, 10800, 6000],
                   heightPercentages: [-0.07, -0.03, -0.08, -0.05],
                   gradientBegin: Alignment.bottomLeft,
                   gradientEnd: Alignment.topRight,
                 ),
-                size: Size(double.infinity, double.infinity),
+                size: const Size(double.infinity, double.infinity),
                 waveAmplitude: 0,
               ),
               Container(
@@ -114,19 +114,15 @@ class _AuthScreensTemplateState extends State<AuthScreensTemplate>
                   horizontal: 20.0,
                   vertical: 30.0,
                 ),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.transparent,
-                  // borderRadius: const BorderRadius.only(
-                  //   topLeft: Radius.circular(50.0),
-                  //   topRight: Radius.circular(50.0),
-                  // ),
                 ),
                 height: MediaQuery.of(context).size.height,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ...widget.children,
-                    Spacer(),
+                    const Spacer(),
                     widget.floatingButton ?? const SizedBox.shrink(),
                   ],
                 ),

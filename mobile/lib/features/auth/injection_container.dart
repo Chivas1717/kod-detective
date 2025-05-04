@@ -1,8 +1,8 @@
 import 'package:clean_architecture_template/features/auth/data/datasource/auth_datasource.dart';
 import 'package:clean_architecture_template/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:clean_architecture_template/features/auth/domain/repositories/auth_repository.dart';
-import 'package:clean_architecture_template/features/auth/presentation/blocs/check_otp_cubit/check_otp_cubit.dart';
-import 'package:clean_architecture_template/features/auth/presentation/blocs/send_otp_cubit/send_otp_cubit.dart';
+import 'package:clean_architecture_template/features/auth/presentation/blocs/login_cubit/login_cubit.dart';
+import 'package:clean_architecture_template/features/auth/presentation/blocs/register_cubit/register_cubit.dart';
 import 'package:clean_architecture_template/features/auth/presentation/blocs/user_cubit/user_cubit.dart';
 import 'package:clean_architecture_template/injection_container.dart';
 import 'package:dio/dio.dart';
@@ -14,8 +14,8 @@ mixin AuthInjector on Injector {
     final Dio dio = sl<Dio>(instanceName: globalDio);
 
     // // cubits
-    sl.registerFactory(() => SendOtpCubit(repository: sl()));
-    sl.registerFactory(() => CheckOtpCubit(repository: sl()));
+    sl.registerFactory(() => LoginCubit(repository: sl()));
+    sl.registerFactory(() => RegisterCubit(repository: sl()));
 
     sl.registerLazySingleton(() => UserCubit(
           repository: sl(),

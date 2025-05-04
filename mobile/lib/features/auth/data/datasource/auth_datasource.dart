@@ -1,21 +1,14 @@
 import 'package:clean_architecture_template/core/helper/shared_preferences.dart';
 import 'package:clean_architecture_template/features/auth/data/models/user_model.dart';
 import 'package:clean_architecture_template/features/auth/domain/entities/user.dart';
-import 'package:clean_architecture_template/injection_container.dart';
 import 'package:dio/dio.dart';
 
 abstract class AuthDatasource {
-  Future<bool> sendOtp(String phoneNumber);
-
-  Future<bool> checkOtp(String phoneNumber, String code);
-
+  Future<User> login(String username, String password);
+  Future<User> register(String username, String password, String email);
   Future<bool> logOut();
-
-  Future<User> getOtherUser(int id);
-
   Future<User> getUser();
-
-  Future<User> updateUser(String? username, String? status);
+  Future<User> updateUser({String? username});
 }
 
 class AuthDatasourceImpl extends AuthDatasource {
@@ -28,90 +21,71 @@ class AuthDatasourceImpl extends AuthDatasource {
   final SharedPreferencesRepository sharedPreferencesRepository;
 
   @override
-  Future<bool> logOut() async {
-    final result = await dio.post(
-      '/api/auth/logout/',
-    );
-    await sl<SharedPreferencesRepository>()
-        .removeString(key: SharedPreferencesKeys.token);
-
-    return result.statusCode == 200 || result.statusCode == 201;
-  }
-
-  @override
-  Future<bool> sendOtp(String phoneNumber) async {
-    final result = await dio.post(
-      '/api/auth/generate_otp/',
-      data: {
-        'phone_number': phoneNumber,
-      },
-    );
-    final bool isCodeSent =
-        result.statusCode == 200 || result.statusCode == 201;
-
-    return isCodeSent;
-  }
-
-  @override
-  Future<bool> checkOtp(String phoneNumber, String code) async {
+  Future<User> login(String username, String password) async {
     final result = await dio.post(
       '/api/auth/login/',
       data: {
-        'phone_number': phoneNumber,
-        'otp': code,
+        'username': username,
+        'password': password,
       },
     );
-
-    if (result.data['token'] != null) {
-      final String token = result.data['token'];
-
+    
+    final User user = UserModel.fromJson(result.data);
+    
+    // Store token
+    if (user.token != null) {
       await sharedPreferencesRepository.writeString(
         key: SharedPreferencesKeys.token,
-        value: token,
+        value: user.token!,
       );
     }
 
-    final bool isFirstLogin = result.data['first_login'];
-
-    return isFirstLogin;
+    return user;
   }
 
   @override
-  Future<User> getOtherUser(id) async {
-    final result = await dio.get(
-      '/api/users/$id/',
+  Future<User> register(String username, String password, String email) async {
+    final result = await dio.post(
+      '/api/auth/register/',
+      data: {
+        'username': username,
+        'password': password,
+        'email': email,
+      },
     );
-
-    User user = UserModel.fromJson(result.data);
+    
+    final User user = UserModel.fromJson(result.data);
+    
+    // Store token
+    if (user.token != null) {
+      await sharedPreferencesRepository.writeString(
+        key: SharedPreferencesKeys.token,
+        value: user.token!,
+      );
+    }
 
     return user;
+  }
+
+  @override
+  Future<bool> logOut() async {
+    await sharedPreferencesRepository.removeString(key: SharedPreferencesKeys.token);
+    return true;
   }
 
   @override
   Future<User> getUser() async {
-    final result = await dio.get(
-      '/api/users/self/',
-    );
-
-    User user = UserModel.fromJson(result.data);
-
-    return user;
+    final result = await dio.get('/api/users/self/');
+    return UserModel.fromJson(result.data);
   }
 
   @override
-  Future<User> updateUser(String? username, String? status) async {
+  Future<User> updateUser({String? username}) async {
     final result = await dio.patch(
-      '/api/users/update-username-status/',
-      data: {"username": username, "status": status},
+      '/api/users/update/',
+      data: {"username": username},
     );
 
-    User user = UserModel.fromJson(result.data);
-
-    await sharedPreferencesRepository.writeString(
-      key: SharedPreferencesKeys.userId,
-      value: user.id.toString(),
-    );
-
-    return user;
+    return UserModel.fromJson(result.data);
   }
 }

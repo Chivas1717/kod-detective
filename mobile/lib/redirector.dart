@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:clean_architecture_template/core/style/colors.dart';
 import 'package:clean_architecture_template/core/widgets/transitions/transitions.dart';
 import 'package:clean_architecture_template/features/auth/presentation/blocs/user_cubit/user_cubit.dart';
-import 'package:clean_architecture_template/features/auth/presentation/screens/enter_phone_screen.dart';
-import 'package:clean_architecture_template/features/chats/presentation/screens/main_chats_screen.dart';
+import 'package:clean_architecture_template/features/auth/presentation/screens/register_screen.dart';
+import 'package:clean_architecture_template/features/chats/presentation/screens/home_screen.dart';
 import 'package:clean_architecture_template/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,22 +24,12 @@ class _RedirectPageState extends State<RedirectPage>
   late final StreamSubscription subscription;
   late final AnimationController _controller;
 
-  late final Animation<double> _animation;
-
   @override
   void initState() {
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1450),
+      duration: const Duration(milliseconds: 1450),
     );
-
-    _animation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(const Duration(milliseconds: 150)).then((value) {
@@ -79,14 +69,14 @@ class _RedirectPageState extends State<RedirectPage>
           if (state is UserData) {
             Navigator.of(context).pushAndRemoveUntil(
               FadePageTransition(
-                child: const MainChatsScreen(),
+                child: const HomeScreen(),
               ),
               (route) => false,
             );
           } else if (state is UserUnregistered) {
             Navigator.of(context).pushAndRemoveUntil(
               FadePageTransition(
-                child: const EnterPhoneScreen(),
+                child: const RegisterScreen(),
               ),
               (route) => false,
             );

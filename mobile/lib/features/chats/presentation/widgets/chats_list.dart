@@ -1,33 +1,29 @@
-import 'package:clean_architecture_template/features/chats/domain/entities/chat.dart';
+import 'package:clean_architecture_template/features/chats/domain/entities/test.dart';
 import 'package:clean_architecture_template/features/chats/presentation/widgets/chat_row.dart';
 import 'package:flutter/material.dart';
 
-class ChatsList extends StatefulWidget {
-  const ChatsList({super.key, required this.chats});
-  final List<Chat> chats;
+class TestsList extends StatefulWidget {
+  const TestsList({super.key, required this.tests});
+  final List<Test> tests;
 
   @override
-  State<ChatsList> createState() => _ChatsListState();
+  State<TestsList> createState() => _TestsListState();
 }
 
-class _ChatsListState extends State<ChatsList> {
+class _TestsListState extends State<TestsList> {
   @override
   Widget build(BuildContext context) {
-    print(widget.chats);
+    print(widget.tests);
     return ListView(
       physics: BouncingScrollPhysics(),
       padding: const EdgeInsets.only(left: 25),
       children: [
         ...List.generate(
-          widget.chats.length,
-          (index) => ChatRow(
+          widget.tests.length,
+          (index) => TestRow(
             img: 'img1.jpeg',
-            name: widget.chats[index].users!.length > 0
-                ? widget.chats[index].users![0].username!
-                : widget.chats[index].users![0].username!,
-            message:
-                widget.chats[index].lastMessage?.text ?? 'Joined recently...',
-            chatId: widget.chats[index].id!,
+            name: widget.tests[index].title!,
+            testId: widget.tests[index].id!,
           ),
         ),
         // ChatRow(img: 'img1.jpeg', name: 'Laura', message: 'Hello, how are you'),

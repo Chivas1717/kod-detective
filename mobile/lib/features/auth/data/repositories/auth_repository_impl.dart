@@ -13,26 +13,26 @@ class AuthRepositoryImpl extends AuthRepository {
   });
 
   @override
-  FutureFailable<void> logOut() {
-    return RepositoryRequestHandler<void>()(
-      request: () => authDatasource.logOut(),
-      defaultFailure: IncorrectEmailFailure(),
-    );
-  }
-
-  @override
-  FutureFailable<bool> sendOtp(String email) {
-    return RepositoryRequestHandler<bool>()(
-      request: () => authDatasource.sendOtp(email),
+  FutureFailable<User> login(String username, String password) {
+    return RepositoryRequestHandler<User>()(
+      request: () => authDatasource.login(username, password),
       defaultFailure: LogInFailure(),
     );
   }
 
   @override
-  FutureFailable<bool> checkOtp(String phoneNumber, String code) {
+  FutureFailable<bool> logOut() {
     return RepositoryRequestHandler<bool>()(
-      request: () => authDatasource.checkOtp(phoneNumber, code),
-      defaultFailure: UnauthorizedFailure(),
+      request: () => authDatasource.logOut(),
+      defaultFailure: LogInFailure(),
+    );
+  }
+
+  @override
+  FutureFailable<User> register(String username, String password, String email) {
+    return RepositoryRequestHandler<User>()(
+      request: () => authDatasource.register(username, password, email),
+      defaultFailure: LogInFailure(),
     );
   }
 
@@ -44,18 +44,18 @@ class AuthRepositoryImpl extends AuthRepository {
     );
   }
 
-  @override
-  FutureFailable<User> getOtherUser(int id) {
-    return RepositoryRequestHandler<User>()(
-      request: () => authDatasource.getOtherUser(id),
-      defaultFailure: ProfileFailure(),
-    );
-  }
+  // @override
+  // FutureFailable<User> getOtherUser(int id) {
+  //   return RepositoryRequestHandler<User>()(
+  //     request: () => authDatasource.getOtherUser(id),
+  //     defaultFailure: ProfileFailure(),
+  //   );
+  // }
 
   @override
-  FutureFailable<User> updateUser({String? username, String? status}) {
+  FutureFailable<User> updateUser({String? username}) {
     return RepositoryRequestHandler<User>()(
-      request: () => authDatasource.updateUser(username, status),
+      request: () => authDatasource.updateUser(username: username),
       defaultFailure: ProfileFailure(),
     );
   }

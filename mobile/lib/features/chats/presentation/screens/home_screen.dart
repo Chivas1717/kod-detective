@@ -1,50 +1,51 @@
 import 'package:clean_architecture_template/core/style/colors.dart';
-import 'package:clean_architecture_template/core/util/pop_up_opener.dart';
 import 'package:clean_architecture_template/core/widgets/transitions/transitions.dart';
 import 'package:clean_architecture_template/features/auth/domain/entities/user.dart';
 import 'package:clean_architecture_template/features/auth/presentation/blocs/user_cubit/user_cubit.dart';
-import 'package:clean_architecture_template/features/chats/presentation/blocs/chats/chats_cubit.dart';
+import 'package:clean_architecture_template/features/chats/presentation/blocs/home/home_cubit.dart';
 import 'package:clean_architecture_template/features/chats/presentation/widgets/chats_list.dart';
-import 'package:clean_architecture_template/features/chats/presentation/widgets/create_chat_modal_window.dart';
 import 'package:clean_architecture_template/features/chats/presentation/widgets/favorite_contacts.dart';
 import 'package:clean_architecture_template/features/chats/presentation/widgets/sections.dart';
 import 'package:clean_architecture_template/features/chats/presentation/widgets/user_avatar.dart';
 import 'package:clean_architecture_template/injection_container.dart';
 import 'package:clean_architecture_template/redirector.dart';
-import 'package:draggable_fab/draggable_fab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MainChatsScreen extends StatefulWidget {
-  const MainChatsScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<MainChatsScreen> createState() => _MainChatsScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _MainChatsScreenState extends State<MainChatsScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   late final UserCubit userCubit;
-  late final ChatsCubit chatsCubit;
+  late final HomeCubit homeCubit;
 
   @override
   void initState() {
     userCubit = sl();
-    chatsCubit = sl()..getChats();
+    homeCubit = sl();
+    homeCubit.getData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print('home screen');
     return BlocConsumer<UserCubit, UserState>(
       bloc: userCubit,
       listener: (context, state) {},
       builder: (context, state) {
         return state is UserData
-            ? BlocBuilder<ChatsCubit, ChatsState>(
-                bloc: chatsCubit,
-                builder: (context, chatsState) {
-                  if (chatsState is ChatsData) {
+            ? BlocBuilder<HomeCubit, HomeState>(
+                bloc: homeCubit,
+                builder: (context, homeState) {
+                  print('home state');
+                  print(homeState);
+                  if (homeState is HomeData) {
                     return Scaffold(
                       key: _globalKey,
                       backgroundColor: const Color(0x550080bf),
@@ -53,11 +54,9 @@ class _MainChatsScreenState extends State<MainChatsScreen> {
                           Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 50, left: 5, right: 5),
+                                padding: const EdgeInsets.only(top: 50, left: 5, right: 5),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     IconButton(
                                       onPressed: () {
@@ -86,8 +85,7 @@ class _MainChatsScreenState extends State<MainChatsScreen> {
                             left: 0,
                             right: 0,
                             child: Container(
-                              padding: const EdgeInsets.only(
-                                  top: 15, left: 25, right: 25),
+                              padding: const EdgeInsets.only(top: 15, left: 25, right: 25),
                               height: 220,
                               decoration: const BoxDecoration(
                                 color: Color(0xEE7ce8ff),
@@ -96,7 +94,7 @@ class _MainChatsScreenState extends State<MainChatsScreen> {
                                   topRight: Radius.circular(40),
                                 ),
                               ),
-                              child: FavoriteContacts(),
+                              child: LeaderBoard(leaderBoard: homeState.leaderBoard),
                             ),
                           ),
                           Positioned(
@@ -113,27 +111,27 @@ class _MainChatsScreenState extends State<MainChatsScreen> {
                                 ),
                                 color: Color(0xFFEFFFFC),
                               ),
-                              child: ChatsList(chats: chatsState.chats),
+                              child: TestsList(tests: homeState.tests),
                             ),
                           ),
                         ],
                       ),
-                      floatingActionButton: DraggableFab(
-                        child: SizedBox(
-                          height: 65,
-                          width: 65,
-                          child: FloatingActionButton(
-                            backgroundColor: const Color(0xEE7ce8ff),
-                            child: const Icon(
-                              Icons.add,
-                              size: 30,
-                            ),
-                            onPressed: () {
-                              showPopUp(context, CreateChatModalWindow());
-                            },
-                          ),
-                        ),
-                      ),
+                      // floatingActionButton: DraggableFab(
+                      //   child: SizedBox(
+                      //     height: 65,
+                      //     width: 65,
+                      //     child: FloatingActionButton(
+                      //       backgroundColor: const Color(0xEE7ce8ff),
+                      //       child: const Icon(
+                      //         Icons.add,
+                      //         size: 30,
+                      //       ),
+                      //       onPressed: () {
+                      //         showPopUp(context, CreateChatModalWindow());
+                      //       },
+                      //     ),
+                      //   ),
+                      // ),
                       drawer: CustomDrawer(
                         user: state.user,
                         userCubit: userCubit,
@@ -233,17 +231,14 @@ class CustomDrawer extends StatelessWidget {
                     icon: Icons.key,
                   ),
                   const DrawerItem(title: 'Chats', icon: Icons.chat_bubble),
-                  const DrawerItem(
-                      title: 'Notifications', icon: Icons.notifications),
-                  const DrawerItem(
-                      title: 'Data and Storage', icon: Icons.storage),
+                  const DrawerItem(title: 'Notifications', icon: Icons.notifications),
+                  const DrawerItem(title: 'Data and Storage', icon: Icons.storage),
                   const DrawerItem(title: 'Help', icon: Icons.help),
                   const Divider(
                     height: 35,
                     color: CColors.green,
                   ),
-                  const DrawerItem(
-                      title: 'Invite a friend', icon: Icons.people_outline),
+                  const DrawerItem(title: 'Invite a friend', icon: Icons.people_outline),
                 ],
               ),
               DrawerItem(
@@ -272,8 +267,7 @@ class DrawerItem extends StatelessWidget {
   final String title;
   final IconData icon;
   final void Function()? onTap;
-  const DrawerItem(
-      {super.key, required this.title, required this.icon, this.onTap});
+  const DrawerItem({super.key, required this.title, required this.icon, this.onTap});
 
   @override
   Widget build(BuildContext context) {

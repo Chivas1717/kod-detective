@@ -2,10 +2,9 @@ import 'package:clean_architecture_template/core/helper/type_aliases.dart';
 import 'package:clean_architecture_template/features/auth/domain/entities/user.dart';
 
 abstract class AuthRepository {
-  FutureFailable<bool> sendOtp(String email);
-  FutureFailable<bool> checkOtp(String phoneNumber, String code);
+  FutureFailable<User> login(String username, String password);
+  FutureFailable<User> register(String username, String password, String email);
+  FutureFailable<bool> logOut();
   FutureFailable<User> getUser();
-  FutureFailable<void> logOut();
-  FutureFailable<User> getOtherUser(int id);
-  FutureFailable<User> updateUser({String? username, String? status});
+  FutureFailable<User> updateUser({String? username});
 }
