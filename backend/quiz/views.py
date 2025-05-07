@@ -281,12 +281,44 @@ class UserUpdateView(APIView):
 
 class CompletedTestsView(generics.ListAPIView):
     """
-    API endpoint that returns tests completed by the current user.
+    API endpoint that returns tests completed by a user.
+    If user_id is provided in the URL, returns that user's completed tests.
+    Otherwise, returns the current user's completed tests.
     """
     serializer_class = TakenTestSerializer
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        return TakenTest.objects.filter(
-            user=self.request.user
-        ).select_related('test')
+        # Check if a specific user_id is provided in the URL
+        user_id = self.kwargs.get('user_id')
+        
+        if user_id:
+            # Get completed tests for the specified user
+            user = get_object_or_404(User, pk=user_id)
+            return TakenTest.objects.filter(
+                user=user
+            ).select_related('test')
+        else:
+            # Get completed tests for the current user
+            return TakenTest.objects.filter(
+                user=self.request.user
+            ).select_related('test')
+
+class OtherUserProfileView(APIView):
+    """
+    API endpoint for retrieving another user's profile
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request, user_id):
+        """Get another user's profile information"""
+        try:
+            user = User.objects.get(pk=user_id)
+            # Include the user's profile data in the serialized response
+            serializer = UserSerializer(user)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            return Response(
+                {"error": "User not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
