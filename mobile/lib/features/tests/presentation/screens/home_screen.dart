@@ -10,6 +10,7 @@ import 'package:clean_architecture_template/redirector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:clean_architecture_template/features/tests/presentation/widgets/language_filter.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -111,8 +112,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                             const SizedBox(height: 30),
 
-                            // Tests Section
-                            TestsSection(tests: homeState.tests).animate().fadeIn(
+                            // Add Language Filter
+                            LanguageFilter(
+                              languages: homeState.languages,
+                              selectedLanguageId: homeState.selectedLanguageId,
+                              onLanguageSelected: (languageId) {
+                                homeCubit.selectLanguage(languageId);
+                              },
+                              onClearFilter: () {
+                                homeCubit.clearLanguageFilter();
+                              },
+                            ).animate().fadeIn(
+                                  delay: const Duration(milliseconds: 300),
+                                  duration: const Duration(milliseconds: 800),
+                                  curve: Curves.easeInOut,
+                                ),
+                            
+                            const SizedBox(height: 20),
+
+                            // Use filteredTests instead of tests
+                            TestsSection(tests: homeState.filteredTests).animate().fadeIn(
                                   delay: const Duration(milliseconds: 600),
                                   duration: const Duration(milliseconds: 800),
                                   curve: Curves.easeInOut,

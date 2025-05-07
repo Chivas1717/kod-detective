@@ -1,4 +1,6 @@
+import 'package:clean_architecture_template/core/widgets/transitions/transitions.dart';
 import 'package:clean_architecture_template/features/tests/domain/entities/test.dart';
+import 'package:clean_architecture_template/features/tests/presentation/screens/test_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -18,7 +20,7 @@ class TestsSection extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: Text(
-            "Available Tests",
+            "Доступні тести",
             style: TextStyle(
               color: Colors.white,
               fontSize: 22,
@@ -27,32 +29,58 @@ class TestsSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        SizedBox(
-          height: 220,
-          child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            itemCount: tests.length,
-            itemBuilder: (context, index) {
-              final test = tests[index];
-              return TestCard(
-                test: test,
-                index: index,
-              ).animate()
-                .fadeIn(
-                  delay: Duration(milliseconds: 100 * index),
-                  duration: const Duration(milliseconds: 600),
+        if (tests.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+            child: Center(
+              child: Column(
+                children: [
+                  const Icon(
+                    Icons.search_off,
+                    color: Colors.white54,
+                    size: 48,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "Немає доступних тестів для цієї мови програмування",
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.7),
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          )
+        else
+          SizedBox(
+            height: 220,
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              itemCount: tests.length,
+              itemBuilder: (context, index) {
+                final test = tests[index];
+                return TestCard(
+                  test: test,
+                  index: index,
                 )
-                .slideX(
-                  delay: Duration(milliseconds: 100 * index),
-                  begin: 0.2,
-                  end: 0,
-                  duration: const Duration(milliseconds: 500),
-                );
-            },
+                    .animate()
+                    .fadeIn(
+                      delay: Duration(milliseconds: 100 * index),
+                      duration: const Duration(milliseconds: 600),
+                    )
+                    .slideX(
+                      delay: Duration(milliseconds: 100 * index),
+                      begin: 0.2,
+                      end: 0,
+                      duration: const Duration(milliseconds: 500),
+                    );
+              },
+            ),
           ),
-        ),
       ],
     );
   }
@@ -94,7 +122,9 @@ class TestCard extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: () {
-            // Handle test selection
+            Navigator.of(context).push(
+              FadePageTransition(child: TestScreen(testId: test.id.toString())),
+            );
           },
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -239,7 +269,7 @@ class TestCard extends StatelessWidget {
 
   Widget _getLanguageIcon(String languageCode) {
     IconData iconData;
-    
+
     switch (languageCode.toLowerCase()) {
       case 'js':
         iconData = Icons.javascript;
@@ -256,7 +286,7 @@ class TestCard extends StatelessWidget {
       default:
         iconData = Icons.code;
     }
-    
+
     return Icon(
       iconData,
       color: Colors.white,

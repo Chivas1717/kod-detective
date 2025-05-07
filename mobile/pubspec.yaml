@@ -57,6 +57,10 @@ dependencies:
   ioc_container: ^1.0.12
   flutter_ioc_container: ^1.0.12
   flutter_animate: ^4.5.2
+  percent_indicator: ^4.2.5
+  flutter_code_editor: ^0.3.3
+  flutter_highlight: ^0.7.0
+  highlight: ^0.7.0
 
 dev_dependencies:
   flutter_test:

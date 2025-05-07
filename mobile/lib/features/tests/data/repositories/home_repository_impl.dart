@@ -3,6 +3,7 @@ import 'package:clean_architecture_template/core/error/repository_request_handle
 import 'package:clean_architecture_template/core/helper/type_aliases.dart';
 import 'package:clean_architecture_template/features/auth/domain/entities/user.dart';
 import 'package:clean_architecture_template/features/tests/data/datasource/home_datasource.dart';
+import 'package:clean_architecture_template/features/tests/domain/entities/language.dart';
 import 'package:clean_architecture_template/features/tests/domain/entities/test.dart';
 import 'package:clean_architecture_template/features/tests/domain/repositories/home_repository.dart';
 
@@ -33,6 +34,14 @@ class HomeRepositoryImpl extends HomeRepository {
   FutureFailable<List<User>> getLeaderBoard() {
     return RepositoryRequestHandler<List<User>>()(
       request: () => homeDatasource.getLeaderBoard(),
+      defaultFailure: ServerFailure(),
+    );
+  }
+
+  @override
+  FutureFailable<List<Language>> getLanguages() {
+    return RepositoryRequestHandler<List<Language>>()(
+      request: () => homeDatasource.getLanguages(),
       defaultFailure: ServerFailure(),
     );
   }
