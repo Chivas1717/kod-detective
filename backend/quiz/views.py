@@ -58,6 +58,14 @@ class TestViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset.filter(language_id=language_id)
         elif language_code:
             queryset = queryset.filter(language__code=language_code)
+        
+        # Exclude tests that the authenticated user has already completed
+        if self.request.user.is_authenticated:
+            completed_test_ids = TakenTest.objects.filter(
+                user=self.request.user
+            ).values_list('test_id', flat=True)
+            
+            queryset = queryset.exclude(id__in=completed_test_ids)
             
         return queryset
 
@@ -270,3 +278,15 @@ class UserUpdateView(APIView):
         # Return the updated user data
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
+class CompletedTestsView(generics.ListAPIView):
+    """
+    API endpoint that returns tests completed by the current user.
+    """
+    serializer_class = TakenTestSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        return TakenTest.objects.filter(
+            user=self.request.user
+        ).select_related('test')

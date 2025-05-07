@@ -47,6 +47,12 @@ class UserProgressSerializer(serializers.ModelSerializer):
         fields = ['question', 'is_correct', 'attempts', 'time_spent', 'used_hint']
 
 class TakenTestSerializer(serializers.ModelSerializer):
+    test_title = serializers.CharField(source='test.title', read_only=True)
+    test_difficulty = serializers.CharField(source='test.difficulty', read_only=True)
+    language_name = serializers.CharField(source='test.language.name', read_only=True)
+    language_code = serializers.CharField(source='test.language.code', read_only=True)
+    
     class Meta:
         model = TakenTest
-        fields = ['test', 'score_obtained', 'completed_at'] 
+        fields = ['id', 'test', 'test_title', 'test_difficulty', 'language_name', 
+                  'language_code', 'score_obtained', 'completed_at'] 
