@@ -12,6 +12,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'app_config.dart';
 import 'core/interceptors/error_logger_interceptor.dart';
 import 'core/network/network_info.dart';
+import 'features/tests/presentation/blocs/profile/profile_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -75,5 +76,14 @@ abstract class Injector {
 
     //External
     sl.registerLazySingleton(() => InternetConnectionChecker.createInstance());
+
+    // Profile
+    sl.registerFactory(
+      () => ProfileCubit(
+        repository: sl(),
+        userCubit: sl(),
+        homeCubit: sl(),
+      ),
+    );
   }
 }

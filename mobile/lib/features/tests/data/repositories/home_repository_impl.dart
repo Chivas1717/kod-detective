@@ -3,6 +3,7 @@ import 'package:clean_architecture_template/core/error/repository_request_handle
 import 'package:clean_architecture_template/core/helper/type_aliases.dart';
 import 'package:clean_architecture_template/features/auth/domain/entities/user.dart';
 import 'package:clean_architecture_template/features/tests/data/datasource/home_datasource.dart';
+import 'package:clean_architecture_template/features/tests/domain/entities/completed_test.dart';
 import 'package:clean_architecture_template/features/tests/domain/entities/language.dart';
 import 'package:clean_architecture_template/features/tests/domain/entities/test.dart';
 import 'package:clean_architecture_template/features/tests/domain/repositories/home_repository.dart';
@@ -13,15 +14,6 @@ class HomeRepositoryImpl extends HomeRepository {
   HomeRepositoryImpl({
     required this.homeDatasource,
   });
-
-  // @override
-  // FutureFailable<void> createChat(userId) {
-  //   return RepositoryRequestHandler<void>()(
-  //     request: () => homeDatasource.createChat(userId),
-  //     defaultFailure: ServerFailure(),
-  //   );
-  // }
-
   @override
   FutureFailable<List<Test>> getTests() {
     return RepositoryRequestHandler<List<Test>>()(
@@ -42,6 +34,30 @@ class HomeRepositoryImpl extends HomeRepository {
   FutureFailable<List<Language>> getLanguages() {
     return RepositoryRequestHandler<List<Language>>()(
       request: () => homeDatasource.getLanguages(),
+      defaultFailure: ServerFailure(),
+    );
+  }
+  
+  @override
+  FutureFailable<List<CompletedTest>> getCompletedTests() {
+    return RepositoryRequestHandler<List<CompletedTest>>()(
+      request: () => homeDatasource.getCompletedTests(),
+      defaultFailure: ServerFailure(),
+    );
+  }
+  
+  @override
+  FutureFailable<User> getUserProfile(int userId) {
+    return RepositoryRequestHandler<User>()(
+      request: () => homeDatasource.getUserProfile(userId),
+      defaultFailure: ServerFailure(),
+    );
+  }
+  
+  @override
+  FutureFailable<List<CompletedTest>> getUserCompletedTests(int userId) {
+    return RepositoryRequestHandler<List<CompletedTest>>()(
+      request: () => homeDatasource.getUserCompletedTests(userId),
       defaultFailure: ServerFailure(),
     );
   }

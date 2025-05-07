@@ -52,6 +52,40 @@ class UserCubit extends Cubit<UserState> {
     );
   }
 
+  Future<bool> updateUsername(String username) async {
+    if (state is UserData) {
+      try {
+        final result = await repository.updateUser(username: username);
+        
+        result.fold(
+          (failure) {
+            emit(UserFailure(
+              errorMessage: failure.errorMessage,
+              errorCode: failure.errorCode ?? 1,
+              user: User(),
+            ));
+            return false;
+          },
+          (user) {
+            emit(UserData(user: user));
+            return true;
+          },
+        );
+        
+        // If we reach here, the update was successful
+        return true;
+      } catch (e) {
+        emit(UserFailure(
+          errorMessage: e.toString(),
+          errorCode: 1,
+          user: User(),
+        ));
+        return false;
+      }
+    }
+    return false;
+  }
+
   // Future<bool> updateUser(UpdatedUserInfo updatedInfo) async {
   //   bool isSuccess = true;
   //   emit(UserLoading(user: state.user));

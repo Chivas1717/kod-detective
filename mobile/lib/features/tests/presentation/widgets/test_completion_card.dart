@@ -361,7 +361,7 @@ class _TestCompletionCardState extends State<TestCompletionCard> {
     if (percentage >= 0.8) {
       return Colors.green;
     } else if (percentage >= 0.6) {
-      return Color.fromARGB(255, 188, 240, 129);
+      return const Color.fromARGB(255, 188, 240, 129);
     } else if (percentage >= 0.4) {
       return Colors.yellow;
     } else if (percentage >= 0.2) {
