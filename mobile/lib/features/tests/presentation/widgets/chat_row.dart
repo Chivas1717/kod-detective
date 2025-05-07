@@ -1,6 +1,6 @@
 import 'package:clean_architecture_template/core/style/colors.dart';
 import 'package:clean_architecture_template/core/widgets/transitions/transitions.dart';
-import 'package:clean_architecture_template/features/chats/presentation/screens/chat_screen.dart';
+import 'package:clean_architecture_template/features/tests/presentation/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 
 class TestRow extends StatefulWidget {

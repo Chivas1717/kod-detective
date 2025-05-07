@@ -1,7 +1,7 @@
 import 'package:clean_architecture_template/features/auth/data/models/user_model.dart';
 import 'package:clean_architecture_template/features/auth/domain/entities/user.dart';
-import 'package:clean_architecture_template/features/chats/data/models/test_model.dart';
-import 'package:clean_architecture_template/features/chats/domain/entities/test.dart';
+import 'package:clean_architecture_template/features/tests/data/models/test_model.dart';
+import 'package:clean_architecture_template/features/tests/domain/entities/test.dart';
 import 'package:dio/dio.dart';
 
 abstract class HomeDatasource {
@@ -22,14 +22,9 @@ class HomeDatasourceImpl extends HomeDatasource {
     final result = await dio.get(
       '/api/leaderboard/',
     );
-    print('leaderboard result');
-    print(result);
     List<User> leaderBoard = List.from(result.data)
         .map((e) => UserModel.fromJson(e))
         .toList();
-
-    print('leaderboard');
-    print(leaderBoard);
 
     return leaderBoard;
   }

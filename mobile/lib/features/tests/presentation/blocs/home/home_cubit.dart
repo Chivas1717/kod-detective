@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:clean_architecture_template/features/auth/domain/entities/user.dart';
-import 'package:clean_architecture_template/features/chats/domain/entities/test.dart';
-import 'package:clean_architecture_template/features/chats/domain/repositories/home_repository.dart';
+import 'package:clean_architecture_template/features/tests/domain/entities/test.dart';
+import 'package:clean_architecture_template/features/tests/domain/repositories/home_repository.dart';
 import 'package:flutter/widgets.dart';
 
 part 'home_state.dart';
@@ -23,8 +23,6 @@ class HomeCubit extends Cubit<HomeState> {
       (failure) => emit(HomeFailure(message: failure.errorMessage)),
       (tests) => leaderBoardResult.fold(
         (failure) {
-          print('leaderboard failure');
-          print(failure);
           emit(HomeFailure(message: failure.errorMessage));
         },
         (leaderBoard) {

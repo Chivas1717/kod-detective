@@ -5,7 +5,7 @@ import 'package:fimber/fimber.dart';
 class ErrorLoggerInterceptor extends Interceptor {
   @override
   Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
-    print(err.response);
+    // print(err.response);
     Fimber.e('---------------- Error Logger Interceptor ----------------');
     if (err.response == null) {
       Fimber.e('Error: no response in error - $err');

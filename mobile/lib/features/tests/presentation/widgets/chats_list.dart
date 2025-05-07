@@ -1,5 +1,5 @@
-import 'package:clean_architecture_template/features/chats/domain/entities/test.dart';
-import 'package:clean_architecture_template/features/chats/presentation/widgets/chat_row.dart';
+import 'package:clean_architecture_template/features/tests/domain/entities/test.dart';
+import 'package:clean_architecture_template/features/tests/presentation/widgets/chat_row.dart';
 import 'package:flutter/material.dart';
 
 class TestsList extends StatefulWidget {

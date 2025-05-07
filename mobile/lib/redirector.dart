@@ -4,7 +4,7 @@ import 'package:clean_architecture_template/core/style/colors.dart';
 import 'package:clean_architecture_template/core/widgets/transitions/transitions.dart';
 import 'package:clean_architecture_template/features/auth/presentation/blocs/user_cubit/user_cubit.dart';
 import 'package:clean_architecture_template/features/auth/presentation/screens/register_screen.dart';
-import 'package:clean_architecture_template/features/chats/presentation/screens/home_screen.dart';
+import 'package:clean_architecture_template/features/tests/presentation/screens/home_screen.dart';
 import 'package:clean_architecture_template/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

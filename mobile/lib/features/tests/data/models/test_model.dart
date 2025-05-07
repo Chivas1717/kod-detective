@@ -1,5 +1,5 @@
 import 'package:clean_architecture_template/features/auth/data/models/user_model.dart';
-import 'package:clean_architecture_template/features/chats/domain/entities/test.dart';
+import 'package:clean_architecture_template/features/tests/domain/entities/test.dart';
 
 class TestModel extends Test {
   TestModel({

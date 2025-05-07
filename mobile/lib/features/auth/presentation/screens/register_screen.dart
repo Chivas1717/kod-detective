@@ -7,7 +7,7 @@ import 'package:clean_architecture_template/features/auth/presentation/blocs/reg
 import 'package:clean_architecture_template/features/auth/presentation/screens/login_screen.dart';
 import 'package:clean_architecture_template/features/auth/presentation/widgets/auth_screens_template.dart';
 import 'package:clean_architecture_template/features/auth/presentation/widgets/custom_app_bar.dart';
-import 'package:clean_architecture_template/features/chats/presentation/screens/home_screen.dart';
+import 'package:clean_architecture_template/features/tests/presentation/screens/home_screen.dart';
 import 'package:clean_architecture_template/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

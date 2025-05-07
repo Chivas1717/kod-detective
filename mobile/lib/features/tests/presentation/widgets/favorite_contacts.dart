@@ -1,5 +1,5 @@
 import 'package:clean_architecture_template/features/auth/domain/entities/user.dart';
-import 'package:clean_architecture_template/features/chats/presentation/widgets/user_avatar.dart';
+import 'package:clean_architecture_template/features/tests/presentation/widgets/user_avatar.dart';
 import 'package:flutter/material.dart';
 
 class LeaderBoard extends StatelessWidget {

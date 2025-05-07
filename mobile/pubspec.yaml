@@ -56,6 +56,7 @@ dependencies:
   web_socket_client: ^0.2.0
   ioc_container: ^1.0.12
   flutter_ioc_container: ^1.0.12
+  flutter_animate: ^4.5.2
 
 dev_dependencies:
   flutter_test:

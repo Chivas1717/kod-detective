@@ -1,7 +1,7 @@
-import 'package:clean_architecture_template/features/chats/data/datasource/home_datasource.dart';
-import 'package:clean_architecture_template/features/chats/data/repositories/home_repository_impl.dart';
-import 'package:clean_architecture_template/features/chats/domain/repositories/home_repository.dart';
-import 'package:clean_architecture_template/features/chats/presentation/blocs/home/home_cubit.dart';
+import 'package:clean_architecture_template/features/tests/data/datasource/home_datasource.dart';
+import 'package:clean_architecture_template/features/tests/data/repositories/home_repository_impl.dart';
+import 'package:clean_architecture_template/features/tests/domain/repositories/home_repository.dart';
+import 'package:clean_architecture_template/features/tests/presentation/blocs/home/home_cubit.dart';
 import 'package:clean_architecture_template/injection_container.dart';
 import 'package:dio/dio.dart';
 

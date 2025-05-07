@@ -2,15 +2,14 @@ import 'package:clean_architecture_template/core/style/colors.dart';
 import 'package:clean_architecture_template/core/widgets/transitions/transitions.dart';
 import 'package:clean_architecture_template/features/auth/domain/entities/user.dart';
 import 'package:clean_architecture_template/features/auth/presentation/blocs/user_cubit/user_cubit.dart';
-import 'package:clean_architecture_template/features/chats/presentation/blocs/home/home_cubit.dart';
-import 'package:clean_architecture_template/features/chats/presentation/widgets/chats_list.dart';
-import 'package:clean_architecture_template/features/chats/presentation/widgets/favorite_contacts.dart';
-import 'package:clean_architecture_template/features/chats/presentation/widgets/sections.dart';
-import 'package:clean_architecture_template/features/chats/presentation/widgets/user_avatar.dart';
+import 'package:clean_architecture_template/features/tests/presentation/blocs/home/home_cubit.dart';
+import 'package:clean_architecture_template/features/tests/presentation/widgets/leaderboard_section.dart';
+import 'package:clean_architecture_template/features/tests/presentation/widgets/tests_section.dart';
 import 'package:clean_architecture_template/injection_container.dart';
 import 'package:clean_architecture_template/redirector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -34,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('home screen');
     return BlocConsumer<UserCubit, UserState>(
       bloc: userCubit,
       listener: (context, state) {},
@@ -43,95 +41,96 @@ class _HomeScreenState extends State<HomeScreen> {
             ? BlocBuilder<HomeCubit, HomeState>(
                 bloc: homeCubit,
                 builder: (context, homeState) {
-                  print('home state');
-                  print(homeState);
                   if (homeState is HomeData) {
                     return Scaffold(
                       key: _globalKey,
-                      backgroundColor: const Color(0x550080bf),
-                      body: Stack(
-                        children: [
-                          Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 50, left: 5, right: 5),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        _globalKey.currentState!.openDrawer();
-                                      },
-                                      icon: const Icon(
-                                        Icons.menu,
-                                        color: CColors.white,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(
-                                        Icons.search,
-                                        color: CColors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Sections(),
-                            ],
+                      backgroundColor: const Color(0xFF1E1E2E),
+                      appBar: AppBar(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        leading: IconButton(
+                          onPressed: () {
+                            _globalKey.currentState!.openDrawer();
+                          },
+                          icon: const Icon(
+                            Icons.menu,
+                            color: Colors.white,
                           ),
-                          Positioned(
-                            top: 160,
-                            left: 0,
-                            right: 0,
-                            child: Container(
-                              padding: const EdgeInsets.only(top: 15, left: 25, right: 25),
-                              height: 220,
-                              decoration: const BoxDecoration(
-                                color: Color(0xEE7ce8ff),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(40),
-                                  topRight: Radius.circular(40),
-                                ),
-                              ),
-                              child: LeaderBoard(leaderBoard: homeState.leaderBoard),
-                            ),
-                          ),
-                          Positioned(
-                            top: 325,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            child: Container(
-                              padding: const EdgeInsets.only(top: 15),
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(40),
-                                  topRight: Radius.circular(40),
-                                ),
-                                color: Color(0xFFEFFFFC),
-                              ),
-                              child: TestsList(tests: homeState.tests),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                      // floatingActionButton: DraggableFab(
-                      //   child: SizedBox(
-                      //     height: 65,
-                      //     width: 65,
-                      //     child: FloatingActionButton(
-                      //       backgroundColor: const Color(0xEE7ce8ff),
-                      //       child: const Icon(
-                      //         Icons.add,
-                      //         size: 30,
-                      //       ),
-                      //       onPressed: () {
-                      //         showPopUp(context, CreateChatModalWindow());
-                      //       },
-                      //     ),
-                      //   ),
-                      // ),
+                      body: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Text(
+                                "Код-детектив",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )
+                                .animate()
+                                .fadeIn(
+                                  duration: const Duration(milliseconds: 600),
+                                  curve: Curves.easeInOut,
+                                )
+                                .slideX(
+                                  begin: -0.2,
+                                  end: 0,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeOut,
+                                ),
+                            const SizedBox(height: 8),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Text(
+                                "Розв'язуйте завдання і піднімайтеся по рейтингу",
+                                style: TextStyle(
+                                  color: Color(0xFFADB5BD),
+                                  fontSize: 16,
+                                ),
+                              ),
+                            )
+                                .animate()
+                                .fadeIn(
+                                  delay: const Duration(milliseconds: 200),
+                                  duration: const Duration(milliseconds: 600),
+                                  curve: Curves.easeInOut,
+                                )
+                                .slideX(
+                                  delay: const Duration(milliseconds: 200),
+                                  begin: -0.2,
+                                  end: 0,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeOut,
+                                ),
+                            const SizedBox(height: 30),
+
+                            // Tests Section
+                            TestsSection(tests: homeState.tests).animate().fadeIn(
+                                  delay: const Duration(milliseconds: 600),
+                                  duration: const Duration(milliseconds: 800),
+                                  curve: Curves.easeInOut,
+                                ),
+
+                            const SizedBox(height: 30),
+
+                            // Leaderboard Section
+                            LeaderboardSection(leaderBoard: homeState.leaderBoard).animate().fadeIn(
+                                  delay: const Duration(milliseconds: 400),
+                                  duration: const Duration(milliseconds: 800),
+                                  curve: Curves.easeInOut,
+                                ),
+
+                            const SizedBox(height: 60),
+                          ],
+                        ),
+                      ),
                       drawer: CustomDrawer(
                         user: state.user,
                         userCubit: userCubit,
@@ -140,13 +139,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
 
                   return const Scaffold(
-                    body: CircularProgressIndicator(
-                      color: CColors.green,
+                    backgroundColor: Color(0xFF1E1E2E),
+                    body: Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xFF7B61FF),
+                      ),
                     ),
                   );
                 })
             : const Scaffold(
-                body: SizedBox.shrink(),
+                backgroundColor: Color(0xFF1E1E2E),
+                body: Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xFF7B61FF),
+                  ),
+                ),
               );
       },
     );
@@ -213,7 +220,13 @@ class CustomDrawer extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      UserAvatar(filename: 'img3.jpeg'),
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.grey[800],
+                        backgroundImage: const NetworkImage(
+                          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                        ),
+                      ),
                       SizedBox(
                         width: 12,
                       ),

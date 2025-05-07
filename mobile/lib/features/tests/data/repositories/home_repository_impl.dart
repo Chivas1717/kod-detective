@@ -2,9 +2,9 @@ import 'package:clean_architecture_template/core/error/failures.dart';
 import 'package:clean_architecture_template/core/error/repository_request_handler.dart';
 import 'package:clean_architecture_template/core/helper/type_aliases.dart';
 import 'package:clean_architecture_template/features/auth/domain/entities/user.dart';
-import 'package:clean_architecture_template/features/chats/data/datasource/home_datasource.dart';
-import 'package:clean_architecture_template/features/chats/domain/entities/test.dart';
-import 'package:clean_architecture_template/features/chats/domain/repositories/home_repository.dart';
+import 'package:clean_architecture_template/features/tests/data/datasource/home_datasource.dart';
+import 'package:clean_architecture_template/features/tests/domain/entities/test.dart';
+import 'package:clean_architecture_template/features/tests/domain/repositories/home_repository.dart';
 
 class HomeRepositoryImpl extends HomeRepository {
   final HomeDatasource homeDatasource;

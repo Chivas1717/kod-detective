@@ -2,7 +2,7 @@ import 'package:clean_architecture_template/core/helper/shared_preferences.dart'
 import 'package:clean_architecture_template/core/interceptors/response_interceptor.dart';
 import 'package:clean_architecture_template/core/interceptors/token_interceptor.dart';
 import 'package:clean_architecture_template/features/auth/injection_container.dart';
-import 'package:clean_architecture_template/features/chats/injection_container.dart';
+import 'package:clean_architecture_template/features/tests/injection_container.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
