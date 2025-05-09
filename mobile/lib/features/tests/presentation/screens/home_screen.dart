@@ -1,5 +1,4 @@
 import 'package:clean_architecture_template/core/style/colors.dart';
-import 'package:clean_architecture_template/core/widgets/transitions/transitions.dart';
 import 'package:clean_architecture_template/features/auth/domain/entities/user.dart';
 import 'package:clean_architecture_template/features/auth/presentation/blocs/user_cubit/user_cubit.dart';
 import 'package:clean_architecture_template/features/tests/presentation/blocs/home/home_cubit.dart';
@@ -7,12 +6,12 @@ import 'package:clean_architecture_template/features/tests/presentation/screens/
 import 'package:clean_architecture_template/features/tests/presentation/widgets/leaderboard_section.dart';
 import 'package:clean_architecture_template/features/tests/presentation/widgets/tests_section.dart';
 import 'package:clean_architecture_template/injection_container.dart';
-import 'package:clean_architecture_template/redirector.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:clean_architecture_template/features/tests/presentation/widgets/language_filter.dart';
+import 'package:clean_architecture_template/features/tests/presentation/blocs/ai_chat/ai_chat_cubit.dart';
+import 'package:clean_architecture_template/features/tests/presentation/widgets/ai_chat_bottom_sheet.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,18 +24,31 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   late final UserCubit userCubit;
   late final HomeCubit homeCubit;
-  final RefreshIndicatorMode _refreshIndicatorMode = RefreshIndicatorMode.inactive;
+  late GeneralAiChatCubit generalAiChatCubit;
 
   @override
   void initState() {
+    super.initState();
     userCubit = sl();
     homeCubit = sl();
     homeCubit.getData();
-    super.initState();
+    generalAiChatCubit = sl();
   }
 
   Future<void> _refreshData() async {
     homeCubit.getData();
+  }
+
+  void _showGeneralAiChatBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => AiChatBottomSheet(
+        chatCubit: generalAiChatCubit,
+        title: 'Загальний AI Помічник',
+      ),
+    );
   }
 
   @override
@@ -171,6 +183,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       drawer: CustomDrawer(
                         user: state.user,
                         userCubit: userCubit,
+                      ),
+                      floatingActionButton: FloatingActionButton(
+                        backgroundColor: const Color(0xFF7B61FF),
+                        onPressed: _showGeneralAiChatBottomSheet,
+                        child: const Icon(Icons.smart_toy_outlined, color: Colors.white),
                       ),
                     );
                   }

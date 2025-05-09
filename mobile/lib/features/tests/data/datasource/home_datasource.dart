@@ -20,6 +20,10 @@ abstract class HomeDatasource {
   Future<User> getUserProfile(int userId);
 
   Future<List<CompletedTest>> getUserCompletedTests(int userId);
+  
+  Future<String> askQuestionAi(String questionId, String prompt);
+  
+  Future<String> askGeneralAi(String prompt);
 }
 
 class HomeDatasourceImpl extends HomeDatasource {
@@ -88,5 +92,25 @@ class HomeDatasourceImpl extends HomeDatasource {
         .toList();
     
     return completedTests;
+  }
+  
+  @override
+  Future<String> askQuestionAi(String questionId, String prompt) async {
+    final result = await dio.post(
+      '/api/questions/$questionId/ask/',
+      data: {'prompt': prompt},
+    );
+    
+    return result.data['response'] as String;
+  }
+  
+  @override
+  Future<String> askGeneralAi(String prompt) async {
+    final result = await dio.post(
+      '/api/ask/',
+      data: {'prompt': prompt},
+    );
+    
+    return result.data['response'] as String;
   }
 }

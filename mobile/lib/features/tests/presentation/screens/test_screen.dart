@@ -1,5 +1,7 @@
 import 'package:clean_architecture_template/core/helper/images.dart';
 import 'package:clean_architecture_template/features/tests/domain/entities/question.dart';
+import 'package:clean_architecture_template/features/tests/domain/repositories/home_repository.dart';
+import 'package:clean_architecture_template/features/tests/presentation/blocs/home/home_cubit.dart';
 import 'package:clean_architecture_template/features/tests/presentation/blocs/test/test_cubit.dart';
 import 'package:clean_architecture_template/features/tests/presentation/widgets/custom_test_button.dart';
 import 'package:clean_architecture_template/features/tests/presentation/widgets/question_types/blank_question.dart';
@@ -12,6 +14,8 @@ import 'package:clean_architecture_template/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:clean_architecture_template/features/tests/presentation/blocs/ai_chat/ai_chat_cubit.dart';
+import 'package:clean_architecture_template/features/tests/presentation/widgets/ai_chat_bottom_sheet.dart';
 
 class TestScreen extends StatefulWidget {
   const TestScreen({
@@ -27,224 +31,282 @@ class TestScreen extends StatefulWidget {
 
 class _TestScreenState extends State<TestScreen> {
   late TestCubit testCubit;
+  late HomeCubit homeCubit;
   bool isClueVisible = false;
   bool isHintVisible = false;
+  late QuestionAiChatCubit aiChatCubit;
 
   @override
   void initState() {
     super.initState();
     testCubit = sl<TestCubit>()..loadTest(widget.testId);
+    homeCubit = sl<HomeCubit>();
+    
+    // Create a new instance of QuestionAiChatCubit
+    aiChatCubit = QuestionAiChatCubit(
+      repository: sl<HomeRepository>(),
+      questionId: widget.testId, // Start with test ID, will update when questions load
+    );
+    
+    // Listen for test state changes to update the question ID
+    testCubit.stream.listen((state) {
+      if (state is TestInProgress) {
+        // Update the question ID to the current question
+        aiChatCubit.updateQuestionId(state.currentQuestion.id.toString());
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // Close the cubit to prevent memory leaks
+    // aiChatCubit.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1E1E2E),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF252538),
-        elevation: 4,
-        title: const Text(
-          'Тест',
-          style: TextStyle(color: Colors.white),
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
-        actions: [
-          BlocBuilder<TestCubit, TestState>(
+    return BlocListener<TestCubit, TestState>(
+      bloc: testCubit,
+      listenWhen: (previous, current) {
+        // Only listen when both states are TestInProgress and the question index has changed
+        return previous is TestInProgress && 
+               current is TestInProgress && 
+               previous.currentQuestionIndex != current.currentQuestionIndex;
+      },
+      listener: (context, state) {
+        if (state is TestInProgress) {
+          // Update the question ID in the AI chat cubit
+          aiChatCubit.updateQuestionId(state.currentQuestion.id.toString());
+        }
+      },
+      child: WillPopScope(
+        onWillPop: _onWillPop,
+        child: Scaffold(
+          backgroundColor: const Color(0xFF1E1E2E),
+          appBar: AppBar(
+            backgroundColor: const Color(0xFF252538),
+            elevation: 4,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () async {
+                if (await _onWillPop()) {
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+            title: const Text(
+              'Тест',
+              style: TextStyle(color: Colors.white),
+            ),
+            iconTheme: const IconThemeData(color: Colors.white),
+            actions: [
+              BlocBuilder<TestCubit, TestState>(
+                bloc: testCubit,
+                builder: (context, state) {
+                  if (state is TestInProgress) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF7B61FF).withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            _formatTime(state.timeSpentInSeconds),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+            ],
+          ),
+          body: BlocBuilder<TestCubit, TestState>(
             bloc: testCubit,
             builder: (context, state) {
-              if (state is TestInProgress) {
-                return Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
-                  child: Center(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF7B61FF).withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        _formatTime(state.timeSpentInSeconds),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+              if (state is TestLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xFF7B61FF),
                   ),
                 );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
-        ],
-      ),
-      body: BlocBuilder<TestCubit, TestState>(
-        bloc: testCubit,
-        builder: (context, state) {
-          if (state is TestLoading) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: Color(0xFF7B61FF),
-              ),
-            );
-          } else if (state is TestFailure) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Помилка: ${state.message}',
-                    style: const TextStyle(color: Colors.red),
-                    textAlign: TextAlign.center,
+              } else if (state is TestFailure) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Помилка: ${state.message}',
+                        style: const TextStyle(color: Colors.red),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      CustomTestButton(
+                        text: 'Спробувати знову',
+                        isPrimary: true,
+                        onPressed: () => testCubit.loadTest(widget.testId),
+                        icon: Icons.refresh,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  CustomTestButton(
-                    text: 'Спробувати знову',
-                    isPrimary: true,
-                    onPressed: () => testCubit.loadTest(widget.testId),
-                    icon: Icons.refresh,
-                  ),
-                ],
-              ),
-            );
-          } else if (state is TestInProgress) {
-            return Stack(
-              children: [
-                Column(
+                );
+              } else if (state is TestInProgress) {
+                return Stack(
                   children: [
-                    TestProgressBar(
-                      currentIndex: state.currentQuestionIndex,
-                      questions: state.questions,
-                      answeredQuestionIds: state.userAnswers.keys.toList(),
-                      onQuestionSelected: (index) {
-                        testCubit.jumpToQuestion(index);
-                      },
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF252538),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF7B61FF),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Text(
-                                      '${state.currentQuestionIndex + 1}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                    Column(
+                      children: [
+                        TestProgressBar(
+                          currentIndex: state.currentQuestionIndex,
+                          questions: state.questions,
+                          answeredQuestionIds: state.userAnswers.keys.toList(),
+                          onQuestionSelected: (index) {
+                            testCubit.jumpToQuestion(index);
+                          },
+                        ),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF252538),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF7B61FF),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          '${state.currentQuestionIndex + 1}',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      const SizedBox(width: 12),
+                                      Text(
+                                        'Питання ${state.currentQuestionIndex + 1} з ${state.questions.length}',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(width: 12),
-                                  Text(
-                                    'Питання ${state.currentQuestionIndex + 1} з ${state.questions.length}',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
+                                ),
+                                const SizedBox(height: 16),
+                                _buildQuestionWidget(state.currentQuestion, state.userAnswers),
+                                const SizedBox(height: 32),
+                                _buildNavigationButtons(state),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (isClueVisible)
+                      _buildOverlay(
+                        state.currentQuestion.clue ?? 'Підказка недоступна',
+                        const Color(0xFF3A3A4E),
+                        () => setState(() => isClueVisible = false),
+                        false,
+                      ),
+                    if (isHintVisible)
+                      _buildOverlay(
+                        state.currentQuestion.hint ?? 'Підказка недоступна',
+                        const Color(0xFF2A2A3C),
+                        () => setState(() => isHintVisible = false),
+                        true,
+                      ),
+                    Positioned(
+                      bottom: 16,
+                      right: 16,
+                      child: Column(
+                        children: [
+                          if (state.currentQuestion.hint != null)
+                            FloatingActionButton(
+                              heroTag: 'hint',
+                              mini: true,
+                              backgroundColor: const Color(0xFF7B61FF),
+                              onPressed: () {
+                                setState(() {
+                                  isHintVisible = true;
+                                  isClueVisible = false;
+                                });
+                                testCubit.useHint();
+                              },
+                              child: const Icon(Icons.lightbulb, color: Colors.amber),
+                            ),
+                          const SizedBox(height: 8),
+                          if (state.currentQuestion.clue != null)
+                            FloatingActionButton(
+                              heroTag: 'clue',
+                              mini: true,
+                              backgroundColor: const Color(0xFF3A3A4E), // Changed to a dark background color
+                              onPressed: () {
+                                setState(() {
+                                  isClueVisible = true;
+                                  isHintVisible = false;
+                                });
+                                testCubit.useHint();
+                              },
+                              child: SvgPicture.asset(
+                                SvgIcons.detective,
+                                width: 24,
+                                height: 24,
                               ),
                             ),
-                            const SizedBox(height: 16),
-                            _buildQuestionWidget(state.currentQuestion, state.userAnswers),
-                            const SizedBox(height: 32),
-                            _buildNavigationButtons(state),
-                          ],
-                        ),
+                        ],
                       ),
                     ),
                   ],
+                );
+              } else if (state is TestCompleted) {
+                return TestCompletionCard(
+                  result: state.result,
+                  onRetry: () => testCubit.restartTest(),
+                  onBackToTests: () => Navigator.of(context).pop(),
+                  questions: state.questions,
+                  userAnswers: state.userAnswers,
+                  homeCubit: homeCubit,
+                );
+              }
+              
+              return const Center(
+                child: Text(
+                  'Завантаження тесту...',
+                  style: TextStyle(color: Colors.white),
                 ),
-                if (isClueVisible)
-                  _buildOverlay(
-                    state.currentQuestion.clue ?? 'Підказка недоступна',
-                    const Color(0xFF3A3A4E),
-                    () => setState(() => isClueVisible = false),
-                    false,
-                  ),
-                if (isHintVisible)
-                  _buildOverlay(
-                    state.currentQuestion.hint ?? 'Підказка недоступна',
-                    const Color(0xFF2A2A3C),
-                    () => setState(() => isHintVisible = false),
-                    true,
-                  ),
-                Positioned(
-                  bottom: 16,
-                  right: 16,
-                  child: Column(
-                    children: [
-                      if (state.currentQuestion.hint != null)
-                        FloatingActionButton(
-                          heroTag: 'hint',
-                          mini: true,
-                          backgroundColor: const Color(0xFF7B61FF),
-                          onPressed: () {
-                            setState(() {
-                              isHintVisible = true;
-                              isClueVisible = false;
-                            });
-                            testCubit.useHint();
-                          },
-                          child: const Icon(Icons.lightbulb, color: Colors.amber),
-                        ),
-                      const SizedBox(height: 8),
-                      if (state.currentQuestion.clue != null)
-                        FloatingActionButton(
-                          heroTag: 'clue',
-                          mini: true,
-                          backgroundColor: const Color(0xFF3A3A4E), // Changed to a dark background color
-                          onPressed: () {
-                            setState(() {
-                              isClueVisible = true;
-                              isHintVisible = false;
-                            });
-                            testCubit.useHint();
-                          },
-                          child: SvgPicture.asset(
-                            SvgIcons.detective,
-                            width: 24,
-                            height: 24,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          } else if (state is TestCompleted) {
-            return TestCompletionCard(
-              result: state.result,
-              onRetry: () => testCubit.restartTest(),
-              onBackToTests: () => Navigator.of(context).pop(),
-              questions: state.questions,
-              userAnswers: state.userAnswers,
-            );
-          }
-          
-          return const Center(
-            child: Text(
-              'Завантаження тесту...',
-              style: TextStyle(color: Colors.white),
-            ),
-          );
-        },
+              );
+            },
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+          floatingActionButton: FloatingActionButton(
+            heroTag: 'ai_chat',
+            backgroundColor: const Color(0xFF7B61FF),
+            onPressed: _showAiChatBottomSheet,
+            child: const Icon(Icons.smart_toy_outlined, color: Colors.white),
+          ),
+        ),
       ),
     );
   }
@@ -409,5 +471,71 @@ class _TestScreenState extends State<TestScreen> {
     final minutes = seconds ~/ 60;
     final remainingSeconds = seconds % 60;
     return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
+  Future<bool> _onWillPop() async {
+    // Only show dialog if test is in progress
+    if (testCubit.state is! TestInProgress) {
+      return true;
+    }
+
+    final shouldPop = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF252538),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text(
+          'Вийти з тесту?',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: const Text(
+          'Якщо ви вийдете зараз, весь прогрес буде втрачено. Ви впевнені, що хочете вийти?',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text(
+              'Залишитись',
+              style: TextStyle(
+                color: Color(0xFF7B61FF),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text(
+              'Вийти',
+              style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return shouldPop ?? false;
+  }
+
+  void _showAiChatBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => AiChatBottomSheet(
+        chatCubit: aiChatCubit,
+        title: 'AI Помічник',
+      ),
+    );
   }
 }

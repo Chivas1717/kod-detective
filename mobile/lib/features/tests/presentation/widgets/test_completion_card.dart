@@ -4,7 +4,6 @@ import 'package:clean_architecture_template/features/tests/presentation/widgets/
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:clean_architecture_template/features/tests/presentation/blocs/home/home_cubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TestCompletionCard extends StatefulWidget {
   final TestResult result;
@@ -12,6 +11,7 @@ class TestCompletionCard extends StatefulWidget {
   final Map<int, dynamic> userAnswers;
   final VoidCallback onRetry;
   final VoidCallback onBackToTests;
+  final HomeCubit? homeCubit;
 
   const TestCompletionCard({
     super.key,
@@ -20,6 +20,7 @@ class TestCompletionCard extends StatefulWidget {
     required this.userAnswers,
     required this.onRetry,
     required this.onBackToTests,
+    this.homeCubit,
   });
 
   @override
@@ -111,7 +112,9 @@ class _TestCompletionCardState extends State<TestCompletionCard> {
                           CustomTestButton(
                             text: 'До списку тестів',
                             onPressed: () {
-                              context.read<HomeCubit>().getData();
+                              if (widget.homeCubit != null) {
+                                widget.homeCubit!.getData();
+                              }
                               widget.onBackToTests();
                             },
                             icon: Icons.list,

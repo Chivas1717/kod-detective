@@ -66,21 +66,21 @@ class TestsSection extends StatelessWidget {
                 return TestCard(
                   test: test,
                   index: index,
-                )
-                    .animate()
-                    .fadeIn(
-                      delay: Duration(milliseconds: 100 * index),
-                      duration: const Duration(milliseconds: 600),
-                    )
-                    .slideX(
-                      delay: Duration(milliseconds: 100 * index),
-                      begin: 0.2,
-                      end: 0,
-                      duration: const Duration(milliseconds: 500),
-                    );
+                );
               },
             ),
-          ),
+          )
+              .animate()
+              .fadeIn(
+                delay: const Duration(milliseconds: 100),
+                duration: const Duration(milliseconds: 600),
+              )
+              .slideX(
+                delay: const Duration(milliseconds: 100),
+                begin: 0.2,
+                end: 0,
+                duration: const Duration(milliseconds: 500),
+              ),
       ],
     );
   }

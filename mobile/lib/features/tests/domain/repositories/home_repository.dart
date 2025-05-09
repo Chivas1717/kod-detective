@@ -11,4 +11,6 @@ abstract class HomeRepository {
   FutureFailable<List<CompletedTest>> getCompletedTests();
   FutureFailable<User> getUserProfile(int userId);
   FutureFailable<List<CompletedTest>> getUserCompletedTests(int userId);
+  FutureFailable<String> askQuestionAi(String questionId, String prompt);
+  FutureFailable<String> askGeneralAi(String prompt);
 }

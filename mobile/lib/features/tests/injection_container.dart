@@ -4,6 +4,7 @@ import 'package:clean_architecture_template/features/tests/data/repositories/hom
 import 'package:clean_architecture_template/features/tests/data/repositories/test_repository_impl.dart';
 import 'package:clean_architecture_template/features/tests/domain/repositories/home_repository.dart';
 import 'package:clean_architecture_template/features/tests/domain/repositories/test_repository.dart';
+import 'package:clean_architecture_template/features/tests/presentation/blocs/ai_chat/ai_chat_cubit.dart';
 import 'package:clean_architecture_template/features/tests/presentation/blocs/home/home_cubit.dart';
 import 'package:clean_architecture_template/features/tests/presentation/blocs/test/test_cubit.dart';
 import 'package:clean_architecture_template/injection_container.dart';
@@ -19,6 +20,10 @@ mixin ChatsInjector on Injector {
     sl.registerLazySingleton(() => HomeCubit(repository: sl()));
 
     sl.registerLazySingleton(() => TestCubit(repository: sl()));
+
+    sl.registerLazySingleton(() => QuestionAiChatCubit(repository: sl(), questionId: ''));
+
+    sl.registerLazySingleton(() => GeneralAiChatCubit(repository: sl()));
 
     // use cases
 

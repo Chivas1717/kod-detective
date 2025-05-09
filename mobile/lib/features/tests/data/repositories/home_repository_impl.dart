@@ -7,6 +7,8 @@ import 'package:clean_architecture_template/features/tests/domain/entities/compl
 import 'package:clean_architecture_template/features/tests/domain/entities/language.dart';
 import 'package:clean_architecture_template/features/tests/domain/entities/test.dart';
 import 'package:clean_architecture_template/features/tests/domain/repositories/home_repository.dart';
+import 'package:clean_architecture_template/core/error/exceptions.dart';
+import 'package:dartz/dartz.dart';
 
 class HomeRepositoryImpl extends HomeRepository {
   final HomeDatasource homeDatasource;
@@ -60,5 +62,29 @@ class HomeRepositoryImpl extends HomeRepository {
       request: () => homeDatasource.getUserCompletedTests(userId),
       defaultFailure: ServerFailure(),
     );
+  }
+
+  @override
+  Future<Either<Failure, String>> askQuestionAi(String questionId, String prompt) async {
+    try {
+      final response = await homeDatasource.askQuestionAi(questionId, prompt);
+      return Right(response);
+    } on ServerException catch (_) {
+      return Left(ServerFailure());
+    } catch (e) {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> askGeneralAi(String prompt) async {
+    try {
+      final response = await homeDatasource.askGeneralAi(prompt);
+      return Right(response);
+    } on ServerException catch (_) {
+      return Left(ServerFailure());
+    } catch (e) {
+      return Left(ServerFailure());
+    }
   }
 }

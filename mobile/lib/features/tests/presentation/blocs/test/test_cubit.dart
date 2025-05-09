@@ -164,6 +164,7 @@ class TestCubit extends Cubit<TestState> {
           result: result,
           questions: currentState.questions,
           userAnswers: currentState.userAnswers,
+          testId: currentState.testId,
         )),
       );
     }
@@ -188,7 +189,8 @@ class TestCubit extends Cubit<TestState> {
     } else if (state is TestCompleted) {
       final completedState = state as TestCompleted;
       
-      loadTest(completedState.questions.first.id.toString());
+      // Use the stored testId
+      loadTest(completedState.testId);
     }
   }
 

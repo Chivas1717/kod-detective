@@ -35,8 +35,8 @@ abstract class Injector {
       () {
         final dio = Dio(BaseOptions(
           baseUrl: sl<AppConfig>().api,
-          connectTimeout: const Duration(milliseconds: 15000),
-          receiveTimeout: const Duration(milliseconds: 15000),
+          connectTimeout: const Duration(milliseconds: 150000),
+          receiveTimeout: const Duration(milliseconds: 150000),
         ));
         dio.options.headers = {
           "content-type": "application/json",

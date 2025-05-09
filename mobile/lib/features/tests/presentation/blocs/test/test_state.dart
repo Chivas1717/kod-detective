@@ -66,10 +66,12 @@ class TestCompleted extends TestState {
   final TestResult result;
   final List<Question> questions;
   final Map<int, dynamic> userAnswers;
+  final String testId;
 
   TestCompleted({
     required this.result,
     required this.questions,
     required this.userAnswers,
+    required this.testId,
   });
 }
