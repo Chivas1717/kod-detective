@@ -86,6 +86,10 @@ class UserCubit extends Cubit<UserState> {
     return false;
   }
 
+  void updateUserAfterLogin(User user) {
+    emit(UserData(user: user));
+  }
+
   // Future<bool> updateUser(UpdatedUserInfo updatedInfo) async {
   //   bool isSuccess = true;
   //   emit(UserLoading(user: state.user));

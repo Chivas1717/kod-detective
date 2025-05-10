@@ -1,6 +1,8 @@
 import 'package:clean_architecture_template/core/style/colors.dart';
+import 'package:clean_architecture_template/core/widgets/transitions/transitions.dart';
 import 'package:clean_architecture_template/features/auth/domain/entities/user.dart';
 import 'package:clean_architecture_template/features/auth/presentation/blocs/user_cubit/user_cubit.dart';
+import 'package:clean_architecture_template/features/auth/presentation/screens/login_screen.dart';
 import 'package:clean_architecture_template/features/tests/presentation/blocs/home/home_cubit.dart';
 import 'package:clean_architecture_template/features/tests/presentation/screens/self_profile_screen.dart';
 import 'package:clean_architecture_template/features/tests/presentation/widgets/leaderboard_section.dart';
@@ -61,6 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ? BlocBuilder<HomeCubit, HomeState>(
                 bloc: homeCubit,
                 builder: (context, homeState) {
+                  print('homeState');
+                  print(homeState);
                   if (homeState is HomeData) {
                     return Scaffold(
                       key: _globalKey,
@@ -303,6 +307,12 @@ class CustomDrawer extends StatelessWidget {
                   label: 'Вийти',
                   onTap: () {
                     userCubit.logOut();
+                    Navigator.of(context).pushAndRemoveUntil(
+                      FadePageTransition(
+                        child: const LoginScreen(),
+                      ),
+                      (route) => false,
+                    );
                   },
                 ),
               ],

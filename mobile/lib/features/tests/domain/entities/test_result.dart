@@ -16,7 +16,7 @@ class TestResult {
 
   /// Calculates the percentage score
   double get percentageScore => 
-      totalScore > 0 ? (scoreObtained / totalScore) * 100 : 0;
+      totalQuestions > 0 ? (correctAnswers / totalQuestions) : 0;
 
   /// Determines if the test was passed (e.g., score > 70%)
   bool get isPassed => percentageScore >= 70;

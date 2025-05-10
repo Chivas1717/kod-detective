@@ -66,6 +66,7 @@ class _RedirectPageState extends State<RedirectPage>
     return BlocConsumer<UserCubit, UserState>(
         bloc: userCubit,
         listener: (context, state) async {
+          print('state is $state');
           if (state is UserData) {
             Navigator.of(context).pushAndRemoveUntil(
               FadePageTransition(
@@ -73,7 +74,7 @@ class _RedirectPageState extends State<RedirectPage>
               ),
               (route) => false,
             );
-          } else if (state is UserUnregistered) {
+          } else if (state is UserUnregistered || state is UserInitial) {
             Navigator.of(context).pushAndRemoveUntil(
               FadePageTransition(
                 child: const RegisterScreen(),

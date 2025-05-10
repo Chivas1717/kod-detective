@@ -57,12 +57,13 @@ class _TestCompletionCardState extends State<TestCompletionCard> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        isPassed ? 'Вітаємо!' : 'Спробуйте ще раз',
+                        isPassed ? 'Вітаємо!' : 'Непогано! Продовжуй вчитися!',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: isPassed ? Colors.green : Colors.orange,
+                          color: isPassed ? Colors.green : Colors.yellow,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 8),
                       Text(

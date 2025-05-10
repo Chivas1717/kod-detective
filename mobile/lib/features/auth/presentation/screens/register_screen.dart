@@ -4,6 +4,7 @@ import 'package:clean_architecture_template/core/widgets/buttons/primary_button.
 import 'package:clean_architecture_template/core/widgets/text_fields/outlined_text_field.dart';
 import 'package:clean_architecture_template/core/widgets/transitions/transitions.dart';
 import 'package:clean_architecture_template/features/auth/presentation/blocs/register_cubit/register_cubit.dart';
+import 'package:clean_architecture_template/features/auth/presentation/blocs/user_cubit/user_cubit.dart';
 import 'package:clean_architecture_template/features/auth/presentation/screens/login_screen.dart';
 import 'package:clean_architecture_template/features/auth/presentation/widgets/auth_screens_template.dart';
 import 'package:clean_architecture_template/features/auth/presentation/widgets/custom_app_bar.dart';
@@ -21,6 +22,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   late final RegisterCubit registerCubit;
+  late final UserCubit userCubit;
   final _formKey = GlobalKey<FormState>();
 
   bool showUsernameError = false;
@@ -40,6 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void initState() {
     registerCubit = sl();
+    userCubit = sl();
     super.initState();
   }
 
@@ -49,6 +52,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         bloc: registerCubit,
         listener: (context, state) {
           if (state is RegisterSuccess) {
+            userCubit.updateUserAfterLogin(state.user);
+
             Navigator.of(context).pushReplacement(
               FadePageTransition(child: const HomeScreen()),
             );
@@ -71,7 +76,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               active: activeButton,
               title: 'Зареєструватися',
               onTap: () {
-                registerCubit.register(usernameController.text, emailController.text, passwordController.text);
+                registerCubit.register(
+                  usernameController.text,
+                  passwordController.text,
+                  emailController.text,
+                );
               },
             ),
             screenTitle: 'Створення акаунту',
@@ -79,15 +88,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 30),
               Center(
                 child: Text(
-                  'Вітаємо!',
-                  style: CTextStyle.titleExtraLarge.copyWith(color: CColors.white),
+                  'Вітаю, юний детектив!',
+                  style: CTextStyle.titleExtraLarge.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
               ),
               const SizedBox(height: 50),
               Center(
                 child: Text(
                   'Введіть дані для реєстрації нижче',
-                  style: CTextStyle.titleMedium.copyWith(color: CColors.white),
+                  style: CTextStyle.titleMedium.copyWith(
+                    color: const Color(0xFFADB5BD),
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),

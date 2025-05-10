@@ -11,6 +11,7 @@ import 'package:clean_architecture_template/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:clean_architecture_template/features/auth/presentation/screens/register_screen.dart';
+import 'package:clean_architecture_template/features/auth/presentation/blocs/user_cubit/user_cubit.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,6 +22,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   late final LoginCubit loginCubit;
+  late final UserCubit userCubit;
   final _formKey = GlobalKey<FormState>();
 
   bool showUsernameError = false;
@@ -37,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     loginCubit = sl();
+    userCubit = sl();
     super.initState();
   }
 
@@ -46,6 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
         bloc: loginCubit,
         listener: (context, state) {
           if (state is LoginSuccess) {
+            userCubit.updateUserAfterLogin(state.user);
+            
             Navigator.of(context).pushAndRemoveUntil(
               FadePageTransition(
                 child: const HomeScreen(),
@@ -78,16 +83,19 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 30),
               Center(
                 child: Text(
-                  'Вітаємо!',
-                  style:
-                      CTextStyle.titleExtraLarge.copyWith(color: CColors.white),
+                  'Вітаю, юний детектив!',
+                  style: CTextStyle.titleExtraLarge.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
               ),
               const SizedBox(height: 50),
               Center(
                 child: Text(
                   'Введіть дані для входу нижче',
-                  style: CTextStyle.titleMedium.copyWith(color: CColors.white),
+                  style: CTextStyle.titleMedium.copyWith(
+                    color: const Color(0xFFADB5BD),
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
