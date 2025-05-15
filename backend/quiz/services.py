@@ -36,6 +36,7 @@ class ChatService:
         ID завдання: {question_data.get('id', 'Невідомо')}
         Тип: {question_data.get('type', 'Невідомо')}
         Питання: {question_data.get('prompt', '')}
+        Мова Програмування: {question_data.get('language', 'Невідомо')}
         {options_text}
         
         Запит користувача: {user_prompt}
