@@ -20,15 +20,12 @@ class LanguageFilter extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: Text(
-            "Filter by Language",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+        const Text(
+          "Сортувати за мовою",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 12),
@@ -36,7 +33,6 @@ class LanguageFilter extends StatelessWidget {
           height: 50,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: languages.length + 1, // +1 for "All" option
             itemBuilder: (context, index) {
               // First item is "All"
